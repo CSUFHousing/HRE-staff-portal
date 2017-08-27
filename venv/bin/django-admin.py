@@ -1,4 +1,4 @@
-#!/home/csufhousing/HRE-staff-portal/venv/bin/python3
+#!/Users/Luke/Sites/HRE-staff-portal/venv/bin/python3.5
 from django.core import management
 
 if __name__ == "__main__":
