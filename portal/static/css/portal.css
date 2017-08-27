@@ -1,0 +1,236 @@
+.sidebar .logo .simple-text, .off-canvas-sidebar .logo .simple-text {
+  font-size: 16px;
+  line-height: inherit;
+}
+
+body > .wrapper > .sidebar > .sidebar-wrapper > .user > .photo {
+  display: none;
+}
+body.sidebar-mini > .wrapper > .sidebar > .sidebar-wrapper > .user > .photo {
+  display: block;
+}
+
+.sidebar-mini > .wrapper > .sidebar > .sidebar-wrapper > .user > .photo {
+  color: white;
+  font-weight: bold;
+  background-color: transparent;
+  box-shadow: none;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  height: auto;
+}
+.sidebar-mini > .wrapper > .sidebar > .sidebar-wrapper > .user > .photo h5 {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+.new-post i {
+  font-size: 25px !important;
+}
+
+.alert.alert-with-icon {
+	margin-top: 0px !important;
+	padding-left: 66px;
+}
+.nav .admin i {
+  color: #e17000 !important;
+}
+.nav .superuser i {
+  color: red !important;
+}
+.swal2-icon.swal2-warning {
+  color: #e17000;
+}
+.header-colors ul {
+  list-style-type: none;
+}
+
+.card-title > .category {
+  font-style: italic;
+}
+h6.title {
+  padding-top: 0px;
+  font-size: 1.2em;
+}
+h1.card-title {
+  padding-bottom: 5px;
+}
+.icon-primary i {
+	font-size: 55px;
+	border: 1px solid #E5E5E5;
+	border-radius: 50%;
+	width: 130px;
+	line-height: 130px;
+	height: 130px;
+  color: #7900d0;
+}
+
+/* copied from material-dashboard for use in portal HTML editors */
+body, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4 {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 300;
+  line-height: 1.5em;
+}
+html * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, .h1 {
+  font-size: 3.8em;
+  line-height: 1.15em;
+}
+
+h2, .h2 {
+  font-size: 2.6em;
+}
+
+h3, .h3 {
+  font-size: 1.825em;
+  line-height: 1.4em;
+  margin: 20px 0 10px;
+}
+
+h4, .h4 {
+  font-size: 1.3em;
+  line-height: 1.4em;
+}
+
+h5, .h5 {
+  font-size: 1.25em;
+  line-height: 1.4em;
+  margin-bottom: 15px;
+}
+
+h6, .h6 {
+  font-size: 1em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.text-warning {
+  color: #ff7700;
+}
+
+.text-primary {
+  color: #7900d0;
+}
+
+.text-danger {
+  color: #e11000;
+}
+
+.text-success {
+  color: #058400;
+}
+
+.text-info {
+  color: #002b54;
+}
+
+.text-rose {
+  color: #e91e63;
+}
+
+.text-gray {
+  color: #999999;
+}
+/* CognitoForms overrides */
+.cognito label {
+  color: black !important;
+}
+.cognito .c-validation {
+  background: #e11000;
+  font-weight: bold;
+  font-size: 12px !important;
+}
+
+table.dataTable > tbody > tr > td:first-child {
+	padding-left: 5px !important;
+}
+
+.text-center textarea {
+  text-align: center;
+  background-color: white;
+  border-radius: 25px;
+}
+.card-header label {
+  color: white !important;
+  font-weight: bold;
+}
+.togglebutton label input[type="checkbox"]:checked + .toggle::after {
+	border-color: #002b54;
+}
+.togglebutton label input[type="checkbox"]:checked + .toggle {
+	background-color: #002b54;
+}
+td .btn-group {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.rcr-activity td {
+  font-weight: bold;
+}
+
+/* Notification dropdown styles */
+.dropdown-menu > li > a.label {
+  background-color: white;
+  text-transform: none !important;
+  color: black !important;
+}
+.dropdown-menu > li > a.label-info {
+  border-left: 5px solid #002b54;
+  border-right: 5px solid #002b54;
+}
+.dropdown-menu > li > a.label-warning {
+  border-left: 5px solid #e17000;
+  border-right: 5px solid #e17000;
+}
+.dropdown-menu > li > a.label-danger {
+  border-left: 5px solid #e11000;
+  border-right: 5px solid #e11000;
+}
+.dropdown-menu > li > a.label-success {
+  border-left: 5px solid #058400;
+  border-right: 5px solid #058400;
+}
+.dropdown-menu > li > a.label-primary {
+  border-left: 5px solid #7900d0;
+  border-right: 5px solid #7900d0;
+}
+.dropdown-menu > li > a.label-info:hover , .dropdown-menu > li > a.label-info:focus , .dropdown-menu > li > a.label-info:active {
+  background-color: #002b54 !important;
+  color: white !important;
+}
+.dropdown-menu > li > a.label-warning:hover , .dropdown-menu > li > a.label-warning:focus , .dropdown-menu > li > a.label-warning:active {
+  background-color: #e17000 !important;
+  color: white !important;
+}
+.dropdown-menu > li > a.label-danger:hover , .dropdown-menu > li > a.label-danger:focus , .dropdown-menu > li > a.label-danger:active {
+  background-color: #e11000 !important;
+  color: white !important;
+}
+.dropdown-menu > li > a.label-success:hover , .dropdown-menu > li > a.label-success:focus , .dropdown-menu > li > a.label-success:active {
+  background-color: #058400 !important;
+  color: white !important;
+}
+.dropdown-menu > li > a.label-primary:hover , .dropdown-menu > li > a.label-primary:focus , .dropdown-menu > li > a.label-primary:active {
+  background-color: #7900d0 !important;
+  color: white !important;
+}
+/* Material Dash Overrides for ATI Compliance */
+.card .card-footer .stats {
+  color: #222;
+}
+.card .category:not([class*="text-"]) {
+  color: #222;
+}
+.form-group label.control-label {
+  color: #222;
+}
+a {
+  color: #0057ab;
+}
+#tinymce iframe {
+  height: 50px;
+  background-color: #e11000;
+}

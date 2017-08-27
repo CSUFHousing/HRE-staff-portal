@@ -1,0 +1,21 @@
+{% extends 'portal/base.html' %}
+{% block title %}404 Error{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="card">
+      <div class="card-header" data-background-color="orange">
+        <h2 class="card-title">404: Not Found :(</h2>
+      </div>
+      <div class="card-content">
+        <p class="lead">Sorry - the content you're trying to access doesn't exist.</p>
+        {% if request.user.is_staff %}
+        <p>If you believe you've reached this page because of a portal issue, contact a web admin to investigate.</p>
+        {% else %}
+        <p>If you believe you've reached this page because of a portal issue, please contact your supervisor to report the issue.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'portal/base.html' %}
+{% block title %}{{ CustomPage.title }}{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="card">
+    <div class="card-header" data-background-color="blue" {% if request.user.is_staff %} data-header-animation="true" {% endif %} >
+      <h3>{{ CustomPage.title }}</h3>
+    </div>
+    <div class="card-content">
+      <div class="card-actions">
+        <button type="button" class="btn btn-danger btn-simple fix-broken-card"><i class="material-icons">build</i> Fix Header!</button>
+      {% if request.user.is_staff %}
+        <a href="/pages/edit/{{ CustomPage.id }}/" class="btn btn-simple btn-primary" data-toggle="tooltip" data-placement="left" title="" data-container="body" data-original-title="Edit this page"><i class="material-icons">mode_edit</i></a>
+        {% if CustomPage.admin_only %}<button class="btn btn-simple btn-danger" data-toggle="tooltip" data-placement="bottom" title="" data-container="body" data-original-title="This page is only accessible to staff members designated as Portal Administrators">Admin Only</button>
+        {% else %}<button class="btn btn-simple btn-success" data-toggle="tooltip" data-placement="bottom" title="" data-container="body" data-original-title="This page is visible to all staff members">All Staff</button>{% endif %}
+        <button class="btn btn-simple btn-danger" onclick="showSwal('warning-message-and-cancel', {{ CustomPage.id }})" data-toggle="tooltip" data-placement="right" title="" data-container="body" data-original-title="Delete this page"><i class="material-icons">delete</i></button>
+      {% endif %}
+      </div>
+        {{ CustomPage.content|safe }}
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+  {% block scripts %}
+  {% if request.user.is_staff %}
+  <script>
+  showSwal = function(type, id) {
+    if(type == 'warning-message-and-cancel') {
+      console.log(id)
+      swal({
+        title: 'Are you sure?',
+        html: '<p>You won\'t be able to undo this. The page will be gone forever.</p>' +
+        '<a href=\"/pages/delete/' + id + '/" class="btn btn-danger btn-wd" >delete it forever</a>' +
+        '<a href="#" class="btn btn-success btn-wd" onclick="swal.close()" >nevermind!</a>',
+        type: 'warning',
+        showConfirmButton: false,
+        showCancelButton: false,
+      }
+    ).catch(swal.noop)}
+  }
+  </script>
+
+  {% endif %}
+  {% endblock %}

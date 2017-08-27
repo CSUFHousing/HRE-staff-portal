@@ -1,0 +1,165 @@
+{% extends 'portal/base.html' %}
+{% load staticfiles %}
+{% block title %}{{ employee.user.get_full_name }}{% endblock %}
+{% block content %}
+
+<div class="row text-center">
+  <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+    <div class="card card-profile">
+      <div class="card-avatar">
+        {% if employee.photo %}
+        <a href="#">
+          <img src="{{ employee.photo.url|default:'' }}" alt="{{ employee.user.first_name }}" class="img">
+        </a>
+        {% endif %}
+      </div>
+      <div class="card-content">
+        <h2 class="card-title">{{ employee }}</h2>
+        <h6 class="title">{{ employee.title }}</h6>
+        {% if employee.pronouns %}<h6 class="small text-info">pronouns: {{ employee.get_pronouns_display }}</h6>{% endif %}
+        {% if not employee.bio %}
+        <p class="text-danger"><strong>{{ employee.user.first_name }} hasn't written a description yet. Send {{ employee.get_personal_pronoun }} an email and encourage {{ employee.get_personal_pronoun}}!</strong></p>
+        {% else %}
+        <p>{{ employee.bio|striptags|linebreaksbr }}</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-header" data-background-color="blue">
+            <h6 class="card-title title">Phone Number</h6>
+          </div>
+          <div class="card-content">
+            <p><strong>{% if not employee.phone == '() -' %}{{ employee.phone }}{% else %}No Phone Number Available{% endif %}</strong></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" data-background-color="blue">
+            <h6 class="card-title title">Email Address</h6>
+          </div>
+          <div class="card-content">
+            <p><strong>{% if employee.user.email %}<a href="mailto:{{ employee.user.email }}">{{ employee.user.email }}</a>{% else %}No Email Address Available{% endif %}</strong></p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" data-background-color="blue">
+            <h6 class="card-title title">Birthday</h6>
+          </div>
+          <div class="card-content">
+            <p><strong>{% if not employee.birthday %}No Birthday Available{% else %}{{ employee.birthday|date:'F j' }}{% endif %}</strong></p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="card">
+          <div class="card-header" data-background-color="orange">
+            <h6 class="card-title title">Workplace Information</h6>
+          </div>
+          <div class="card-content">
+            <p class="text-muted">Works in</p>
+            <p><strong>{{ employee.get_department_display }}</strong></p>
+            {% if employee.supervisor %}
+            <p class="text-muted">Supervised by</p>
+            <p><strong><a href="/staff/{{ employee.supervisor.user.username }}">{{ employee.supervisor }}</a></strong></p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" data-background-color="green">
+            <h6 class="card-title title">Housing Information</h6>
+          </div>
+          <div class="card-content">
+            {% if employee.title == 'Resident Advisor' or employee.title == 'Senior Resident Advisor' %}
+            <p class="text-muted">Resident Advisor for</p>
+            <p><strong>{{ employee.get_RA_floor }}</strong></p>
+            {% endif %}
+            {% if employee.building and employee.room %}
+            <p class="text-muted">Lives in</p>
+            <p><strong>{{ employee.building }} {{ employee.room }}</strong></p>
+            {% else %}
+            <p><strong>Lives Off-Campus</strong></p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% if request.user.id == employee.user.id %}
+    <div class="togglebutton">
+      <label><input type="checkbox" id="profileedit"> Show Profile Editor</label>
+    </div>
+    <div style="display: none;" id="descform">
+      <form enctype="multipart/form-data" action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="card">
+              <div class="form-group text-center">
+                <div class="card-header" data-background-color="purple">
+                  <label for="id_photo">Photo Upload:</label>
+                </div>
+                <div class="card-content">
+                  <div class="row">
+                    <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                      <div class="fileinput-new thumbnail img-circle">
+                        <img src="{% static 'img/placeholder.jpg' %}" alt="...">
+                      </div>
+                      <div class="fileinput-preview fileinput-exists thumbnail img-circle"></div>
+                      <div>
+                        <span class="btn btn-round btn-info btn-file">
+                          <span class="fileinput-new">Add Photo</span>
+                          <span class="fileinput-exists">Change</span>
+                          {{ form.photo }}</span>
+                          <br />
+                          <a href="#" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i class="fa fa-times"></i> Remove</a>
+                        </div>
+                      </div>
+                    </div>
+                    <p class="text-center">For the best look, use a square photo!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="card">
+                <div class="form-group label-floating text-center">
+                  <div class="card-header" data-background-color="purple">
+                    <label for="id_phone">Edit Phone Number:</label>
+                  </div>
+                  <div class="card-content">
+                    {{ form.phone }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="form-group label-floating text-center">
+              <div class="card-header" data-background-color="purple">
+                <label for="id_bio">Edit your description:</label>
+              </div>
+              <div class="card-content">
+                {{ form.bio }}
+              </div>
+            </div>
+            <button class="btn btn-success" type="submit"><i class="material-icons">assignment_turned_in</i> &nbsp;Save Changes</button>
+          </div>
+        </form>
+      </div>
+      {% endif %}
+    </div>
+
+
+
+  </div>
+
+  {% endblock %}
+  {% block scripts %}
+  {% if request.user.id == employee.user.id %}
+  <script>
+  $('#profileedit').on('click', function() {
+    $('#descform').toggle();
+  })
+  </script>
+  {% endif %}
+  {% endblock %}

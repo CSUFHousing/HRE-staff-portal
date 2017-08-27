@@ -1,0 +1,134 @@
+{% extends 'portal/base.html' %}
+{% block title %}{{ cname }} Editor {% endblock %}
+{% block content %}
+{% load staticfiles %}
+
+<div class="row">
+  <div class="card">
+    <div class="card-header" id="pageheader" data-background-color="{{ item.header_color|default:'orange' }}">
+      <h3>{{ cname|default:"New Content" }} Editor</h3>
+    </div>
+    <div class="card-content">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group label-floating">
+              <label for="{{ form.title.id_for_label }}" class="control-label">{{ form.title.label }}</label> {{ form.title }}
+            </div>
+          </div>
+          {% if cname == 'Page' or cname == 'Tab' %}
+          <div class="col-sm-6">
+            <div class="form-group label-floating">
+              <label for="{{ form.customurl.id_for_label }}" class="control-label">{% if cname == 'Page' %}Page URL{% else %}Tab ID{% endif %}</label> {{ form.customurl }}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% if cname == 'Post' %}
+        <label for="{{ form.header_color.id_for_label }}" class="control-label" ></label> {{ form.header_color }}
+
+        <div class="row">
+          <div class="col-xs-12 header-colors">
+            <label class="control-label">Post Header Color (click to change)</label><br />
+            <a href="#" data-color-picker="purple" id="purple" class="btn btn-primary btn-sm">purple</a>&nbsp;
+            <a href="#" data-color-picker="blue" id="blue" class="btn btn-info btn-sm">blue</a>&nbsp;
+            <a href="#" data-color-picker="green" id="green" class="btn btn-success btn-sm">green</a>&nbsp;
+            <a href="#" data-color-picker="orange" id="orange" class="btn btn-warning btn-sm">orange</a>&nbsp;
+            <a href="#" data-color-picker="red" id="red" class="btn btn-danger btn-sm">red</a>&nbsp;
+            <a href="#" data-color-picker="rose" id="rose" class="btn btn-rose btn-sm">rose</a> &nbsp;
+          </div>
+        </div>
+        {% endif %}
+        <div class="row">
+          <div class="col-xs-12 text-center" id="loading">
+            <br />
+            <h6 class="text-warning"><strong>loading editor...</strong></h6>
+            <i class="fa fa-pulse fa-3x fa-spinner"></i>
+            <br />
+          </div>
+          <div class="col-xs-12" id="texteditor" style="display: none;">
+            <label for="{{ form.content.id_for_label }}" class="control-label">{{ form.content.label }}</label> {{ form.content }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="checkbox">
+              <label>
+                {{ form.admin_only }}
+                <span class="checkbox-material"></span> Visible for Admins Only
+              </label>
+            </div>
+          </div>
+        </div>
+        {% if cname == 'Page' or cname == 'Tab' %}
+        <div class="row">
+          <div class="col-sm-4" data-toggle="tooltip" data-placement="bottom" title="" data-container="body" data-original-title="If it doesn't automatically happen, replace spaces in the icon name with underscores!">
+            <div class="form-group label-floating">
+              <label for="{{ form.icon.id_for_label }}" class="control-label">{{ form.icon.label }}</label> {{ form.icon }}
+            </div>
+          </div>
+          <div class="col-sm-2">
+            <a class="btn btn-info btn-round" href="#" data-toggle="tooltip" data-placement="bottom" title="" data-container="body" data-original-title="If you don't see an icon here, something is wrong with the icon name.">
+              <i id="actual_icon" class="material-icons">{{ item.icon }}</i> &nbsp;Icon Preview
+            </a>
+          </div>
+          <div class="col-sm-6"><a class="btn btn-info btn-simple btn-rounded" target="_blank" href="https://material.io/icons/">Click here to view icon options &nbsp;<i class="material-icons">call_made</i></a>
+          </div>
+        </div>
+        {% endif %}
+        <button type="submit" class="btn btn-success btn-rounded"><i class="material-icons">check</i> Save</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=y012f3t5hgkqmwcy47q3oxos9dv63d1dzjey9v6gxuid8buf"></script>
+<script>
+
+tinymce.init({
+  selector:'#id_content',
+  toolbar: ['| cut, copy, paste, | alignleft, aligncenter, alignright, outdent, indent, | bullist, numlist, |blockquote, link, image | undo, redo,| subscript, superscript, | code',
+  'styleselect, formatselect | bold, italic, underline, strikethrough, removeformat, '],
+  menubar: false,
+  plugins: 'code autolink link image lists contextmenu',
+  contextmenu: "link image | class",
+  code_dialog_width: 800,
+  height: 800,
+  content_css: "{% static 'css/portal.css' %}",
+  style_formats: [
+    {title: 'Blue Text', inline: 'strong', classes: 'text-info'},
+    {title: 'Green Text', inline: 'strong', classes: 'text-success'},
+    {title: 'Orange Text', inline: 'strong', classes: 'text-warning'},
+    {title: 'Red Text', inline: 'strong', classes: 'text-danger'},
+    {title: 'Purple Text', inline: 'strong', classes: 'text-primary'},
+  ],
+  style_formats_merge: true,
+});
+
+var icon = $('#actual_icon')
+var field = $('#id_icon')
+field.on('change', function (event) {
+  field[0].value = field[0].value.replace(/ /g,"_");
+  icon[0].innerHTML = field[0].value
+});
+
+var buttons = $('[data-color-picker]');
+var select = $('#id_header_color');
+var header = $('#pageheader');
+buttons.on('click', function(event) {
+  event.preventDefault();
+  var color = event.target.id;
+  header[0].setAttribute('data-background-color', color);
+  select[0].value = color;
+})
+
+$(document).ready( function () {
+  $('#loading').toggle();
+  $('#texteditor').toggle();
+})
+</script>
+{% endblock %}

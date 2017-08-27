@@ -1,0 +1,25 @@
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    <i class="material-icons">notifications</i>
+    {% if unreads %}<span class="notification">{{ unreads|length }}</span>{% endif %}
+    <p class="hidden-lg hidden-md">Notifications<b class="caret"></b></p>
+  </a>
+  <ul class="dropdown-menu">
+
+    {% if unreads %}
+      {% for notif in unreads %}
+      <li>
+        <a href="/notifications/" class="label label-{{ notif.context|default:'info' }}">
+          {{ notif.message|default:'it empty'|striptags|truncatechars:35 }}
+        </a>
+      </li>
+      {% endfor %}
+    {% else %}
+      <li><a class="label label-success" href="/notifications/">You have no new notifications.</a></li>
+    {% endif %}
+    <hr />
+    <div class="text-center">
+      <a href="/notifications" class="btn btn-sm btn-warning">View All</a>
+    </div>
+  </ul>
+</li>

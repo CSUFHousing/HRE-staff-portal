@@ -1,0 +1,19 @@
+<script>
+var f = $('.btn-form-link');
+f.each( function () {
+  var a = $(this).attr('href');
+  var b = a + '?entry={"ContactInformation":{"Name":{"First":"{{ request.user.first_name }}", "Last":"{{ request.user.last_name }}"}, "Phone":"{{ request.user.employee.phone }}", "Email":"{{ request.user.email }}"}}';
+  $(this).attr('href', b);
+});
+var f3 = $('.btn-form-link-3');
+f3.each ( function () {
+  var a = $(this).attr('href');
+  var b = a + '?entry={"SubmittingStaffName":"{{ request.user.get_full_name }}", "Phone":"{{ request.user.employee.phone }}", "Email":"{{ request.user.email }}", "Supervisor":"{{ request.user.employee.supervisor }}"}';
+  $(this).attr('href', b);
+})
+
+$(document).ready( function () {
+  $('#loading').toggle();
+  $('#main').toggle();
+});
+</script>

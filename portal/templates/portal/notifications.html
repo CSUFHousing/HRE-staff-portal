@@ -1,0 +1,64 @@
+{% extends 'portal/base.html' %}
+{% block title %}Notifcation History{% endblock %}
+{% block content %}
+
+<div class="row" style="margin-bottom: 15px;">
+  <div class="col-xs-4 col-sm-3 col-lg-2 text-center">
+    {% if unreads %}<a href="/notif-clear/{{ request.user.employee.id }}/" class="btn btn-sm btn-round btn-info" id="readall">Mark All as Read</a>
+    {% else %}<button disabled class="btn btn-sm btn-round btn-info">No New Notifications</button>{% endif %}
+  </div>
+<div class="col-xs-8 col-sm-9 col-lg-10"><h3 style="margin-top: 0px;">Notification History</h3></div>
+</div>
+<div id="notifs">
+  {% for notif in notifs %}
+  <div class="row">
+    <div class="col-xs-4 col-sm-3 col-lg-2 text-center">
+      <div class="alert"><strong>{{ notif.sent_date|date:'F j \a\t P' }}</strong></div>
+    </div>
+    <div class="col-xs-8 col-sm-9 col-lg-10">
+    {% if notif.context == "info" %}
+    <div class="alert alert-info {% if notif.unread %} alert-with-icon {% endif %}">
+      <i class="material-icons" data-notify="icon" >info_outline</i>
+      <span data-notify="notif"> <b>Info: </b> {{notif.message|safe}} </span>
+    </div>
+
+    {% elif notif.context == "success" %}
+    <div class="alert alert-success {% if notif.unread %} alert-with-icon {% endif %}">
+      <i class="material-icons" data-notify="icon" >check</i>
+      <span data-notify="notif"> <b>Good News! </b> {{notif.message|safe}} </span>
+    </div>
+
+    {% elif notif.context == "warning" %}
+    <div class="alert alert-warning {% if notif.unread %} alert-with-icon {% endif %}">
+      <i class="material-icons" data-notify="icon" >warning</i>
+      <span data-notify="notif"> <b>Warning: </b> {{notif.message|safe}}</span>
+    </div>
+
+    {% elif notif.context == "danger" %}
+    <div class="alert alert-danger {% if notif.unread %} alert-with-icon {% endif %}">
+      <i class="material-icons" data-notify="icon" >error_outline</i>
+      <span data-notify="notif"> <b>Alert: </b> {{notif.message|safe}}</span>
+    </div>
+    {% elif notif.context == "primary" %}
+    <div class="alert alert-primary {% if notif.unread %} alert-with-icon {% endif %}">
+      <i class="material-icons" data-notify="icon" >info</i>
+      <span data-notify="notif"> <b>Note: </b> {{notif.message|safe}}</span>
+    </div>
+
+    {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+var thing;
+$('#readall').on('click', function() {
+  $('#notifs').children().children().children().removeClass('alert-with-icon');
+});
+</script>
+{% endblock %}

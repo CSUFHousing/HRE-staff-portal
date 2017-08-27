@@ -1,0 +1,32 @@
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == "info" %}
+<div class="alert alert-info alert-with-icon">
+  <i class="material-icons" data-notify="icon" >info_outline</i>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
+  <span data-notify="message"> <b>Info: </b> {{message|safe}} </span>
+</div>
+
+{% elif message.tags == "success" %}
+<div class="alert alert-success alert-with-icon">
+  <i class="material-icons" data-notify="icon" >check</i>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
+  <span data-notify="message"> <b>Success! </b> {{message|safe}} </span>
+</div>
+
+{% elif message.tags == "warning" %}
+<div class="alert alert-warning alert-with-icon">
+  <i class="material-icons" data-notify="icon" >warning</i>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
+  <span data-notify="message"> <b>Warning: </b> {{message|safe}}</span>
+</div>
+
+{% elif message.tags == "error" %}
+<div class="alert alert-danger alert-with-icon">
+  <i class="material-icons" data-notify="icon" >error_outline</i>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
+  <span data-notify="message"> <b>Error: </b> {{message|safe}}</span>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}

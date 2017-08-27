@@ -1,0 +1,136 @@
+{% extends 'portal/base.html' %}
+{% load humanize %}
+
+{% block title %} Staff Portal Home{% endblock %}
+{% block content %}
+
+{% include 'portal/components/RCRstats.html' %}
+{% if request.user.is_staff %}
+<div class="row">
+  <div class="col-xs-12 text-center">
+    <div class="nav-center">
+      <ul class="nav nav-pills nav-pills-icons nav-pills-info" role="tablist">
+        <li class="active">
+          <a href="#admins" role="tab" data-toggle="tab" aria-expanded="true">
+            Portal Administrator Posts
+          </a>
+        </li>
+        <li class="">
+          <a href="#mainposts" role="tab" data-toggle="tab" aria-expanded="false">
+            All Staff Posts
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endif %}
+<div class="tab-content">
+  {% if request.user.is_staff %}
+  <div class="tab-pane active" id="admins">
+    {% for post in posts %}
+    {% if post.admin_only %}
+    <div class="row">
+      <div class="card">
+        <div class="card-header" data-background-color="{{ post.header_color }}">
+          <h3>{{ post.title }}</h3>
+          <h6 class="small">last published {{ post.published_date|naturaltime }}{% if post.last_published_by %} by <a href="/staff/{{ post.last_published_by.user.username }}/">{{ post.last_published_by }}</a>{% endif %}</h6>
+        </div>
+        <div class="card-content">
+          <p>{{ post.content|safe }}</p>
+          {% if request.user.is_staff %}
+          <div class="row">
+            <div class="col-xs-6">
+              <a href="/posts/edit/{{ post.id }}/" class="btn btn-sm btn-primary btn-just-icon" data-toggle="tooltip" data-placement="right" title="" data-container="body" data-original-title="Edit this post"><i class="material-icons">mode_edit</i></a>
+            </div>
+            <div class="col-xs-6 text-right">
+              <button class="btn btn-sm btn-danger btn-just-icon" onclick="showSwal('warning-message-and-cancel', {{post.id}})" data-toggle="tooltip" data-placement="left" title="" data-container="body" data-original-title="Delete this post"><i class="material-icons">delete</i></button>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+  </div>
+  {% endif %}
+  <div class="tab-pane {% if not request.user.is_staff %}active{% endif %}" id="mainposts">
+    {% for post in posts %}
+    {% if not post.admin_only %}
+    <div class="row">
+      <div class="card">
+        <div class="card-header" data-background-color="{{ post.header_color }}">
+          <h3>{{ post.title }}</h3>
+          <h6 class="small">last published {{ post.published_date|naturaltime }} by <a href="/staff/{{ post.last_published_by.user.username }}/"> {{ post.last_published_by }}</a></h6>
+        </div>
+        <div class="card-content">
+          {{ post.content|safe }}
+          {% if request.user.is_staff %}
+          <div class="row">
+            <div class="col-xs-6">
+              <a href="/posts/edit/{{ post.id }}/" class="btn btn-sm btn-primary btn-just-icon" data-toggle="tooltip" data-placement="right" title="" data-container="body" data-original-title="Edit this post"><i class="material-icons">mode_edit</i></a>
+            </div>
+            <div class="col-xs-6 text-right">
+              <button class="btn btn-sm btn-danger btn-just-icon" onclick="showSwal('warning-message-and-cancel', {{post.id}})" data-toggle="tooltip" data-placement="left" title="" data-container="body" data-original-title="Delete this post"><i class="material-icons">delete</i></button>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% if request.user.is_staff %}
+<div class="row">
+  <div class="col text-center">
+    <a href="/posts/new" class="btn btn-simple btn-success btn-lg new-post" data-toggle="tooltip" data-placement="bottom" title="" data-container="body" data-original-title="Add a new post"><i class="material-icons">control_point</i></a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+{% block scripts %}
+{% if request.user.is_staff %}
+<script>
+showSwal = function(type, id) {
+  if(type == 'warning-message-and-cancel') {
+    console.log(id)
+    swal({
+      title: 'Are you sure?',
+      html: '<p>You won\'t be able to undo this. The post will be gone forever.</p>' +
+            '<a href=\"/posts/delete/' + id + '/" class="btn btn-danger btn-wd" >delete it forever</a>' +
+            '<a href="#" class="btn btn-success btn-wd" onclick="swal.close()" >nevermind!</a>',
+      type: 'warning',
+      showConfirmButton: false,
+      showCancelButton: false,
+    }
+  ).catch(swal.noop)}
+}
+</script>
+{% endif %}
+<script>
+  var data1 = {
+    labels: [ {% for date in last7 %}'{{ date|date:'n/j' }}',{% endfor %} ],
+    series: [[ {% for entry in rcrs_user_activity %} {{ entry.qty|default:0 }}, {% endfor %}    ]],
+  };
+  var data2 = {
+    labels: [ {% for date in last7 %}'{{ date|date:'n/j' }}',{% endfor %} ],
+    series: [[ {% for entry in rcrs_all_activity %} {{ entry|default:0 }}, {% endfor %}    ]],
+  };
+  var options = {
+    lineSmooth: Chartist.Interpolation.cardinal({
+      tension: 0
+    }),
+    low: 0,
+    height: 185,
+    chartPadding: {top: 20, right: 10, bottom: 0, left: 0},
+  };
+  var RCRUserActivityChart = new Chartist.Line('#useractivity', data1, options);
+  var RCRAllActivityChart = new Chartist.Line('#allactivity', data2, options);
+  md.startAnimationForLineChart(RCRUserActivityChart);
+  md.startAnimationForLineChart(RCRAllActivityChart);
+</script>
+{% endblock %}

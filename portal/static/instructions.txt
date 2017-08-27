@@ -1,0 +1,28 @@
+!! please read this file before you try to update any static files (css, images, or javascript)
+
+This folder (/portal/static/) is a *staging* folder. Things inside of it are only
+served in a browser if you're using the django development server.
+
+So you're probably thinking, "how does that help? I want to update CSS on the
+live Staff Portal that people are actually using."
+
+That's fine. Here's how you do that:
+1. Make whatever changes you need to the files in this folder.
+2. On the server that hosts the portal in production,
+  a. In a bash console, navigate to the directory that contains manage.py
+  b. Make sure you are working in the project's virtual environment. In a bash console:
+      $ source venv/bin/activate
+  c. Run django's collectstatic command in the same bash console:
+      $ python manage.py collectstatic
+      When you're prompted for an answer, type 'yes'
+
+"What the heck does collectstatic do?"
+Collectstatic creates copies of all your static files and moves them to /static
+
+"Why does this matter?"
+Because pythonanywhere (the server that hosts our portal)
+does some HTTP routing magic to serve static files more efficiently by serving them
+seperately from the rest of our django app, and also stops our django app from
+trying to process requests that don't match anything in urls.py (like the static files)
+
+Just do it.

@@ -1,0 +1,49 @@
+{% extends 'portal/base.html' %}
+{% block title %}Marketing Resources{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="col-xs-12 text-center" id="loading">
+      <br />
+      <h6 class="text-warning"><strong>loading...</strong></h6>
+      <i class="fa fa-pulse fa-3x fa-spinner"></i>
+      <br />
+    </div>
+    <div class="card" style="display: none;" id="main">
+      <div class="card-header card-header-tabs" data-background-color="purple">
+        <div class="tabs-navigation">
+          <div class="nav-tabs-wrapper">
+            <ul class="nav nav-tabs" role="tablist">
+              {% for tab in tabs %}
+              {% if tab.admin_only and user.is_staff or not tab.admin_only %}
+              <li class="{% if forloop.first %}active{% endif %}">
+                <a href="#{{ tab.customurl }}" role="tab" data-toggle="tab" aria-expanded="{% if forloop.first %}false{% else %}true{% endif %}">
+                  <i class="material-icons">{{ tab.icon }}</i> {{ tab.title }}
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="tab-content">
+          {% for tab in tabs %}
+          {% if tab.admin_only and user.is_staff or not tab.admin_only %}
+          <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ tab.customurl }}">
+            {{ tab.content|safe }}
+            {% if user.is_staff %}<div class="text-center"><a href="/tabs/edit/{{ tab.id }}" class="btn btn-sm btn-primary btn-icon"><i class="material-icons">edit</i> Edit this tab</a></div>{% endif %}
+          </div>
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% include "portal/components/form-prefiller.html" %}
+{% endblock %}

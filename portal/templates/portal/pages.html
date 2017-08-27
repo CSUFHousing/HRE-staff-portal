@@ -1,0 +1,62 @@
+{% extends 'portal/base.html' %}
+{% load humanize %}
+{% block title %}Custom Pages{% endblock %}
+{% block content %}
+
+{% for page in cpages %}
+<div class="row">
+  <div class="card">
+    <div class="card-header" data-background-color="blue">
+      <h3>{{ page.title }}</h3>
+      <h6 class="small">last published {{ page.published_date }}</h6>
+    </div>
+    <div class="card-content">
+      <p>{{ page.content|safe|truncatewords_html:50 }}</p>
+      {% if request.user.is_staff %}
+      <div class="row">
+        <div class="col-sm-2 col-xs-6">
+          <a href="/pages/edit/{{ page.id }}/" class="btn btn-sm btn-primary btn-just-icon" data-toggle="tooltip" data-placement="right" title="" data-container="body" data-original-title="Edit this page"><i class="material-icons">mode_edit</i></a>
+        </div>
+        <div class="col-sm-8 hidden-xs text-center">
+          {% if page.admin_only %}<h3><label class="label label-danger" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="This page is only accessible to staff members designated as Portal Administrators">Admin Only</label></h3>
+          {% else %}<h3><label class="label label-success" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="This page is visible to all staff members">All Staff</label></h3>{% endif %}
+        </div>
+        <div class="col-sm-2 col-xs-6 text-right">
+          <button class="btn btn-sm btn-danger btn-just-icon" onclick="showSwal('warning-message-and-cancel', {{ page.id }})" data-toggle="tooltip" data-placement="left" title="" data-container="body" data-original-title="Delete this page"><i class="material-icons">delete</i></button>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% if request.user.is_staff %}
+<div class="row">
+  <div class="col text-center">
+    <a href="/pages/new/" class="btn btn-simple btn-success btn-lg new-post" data-toggle="tooltip" data-placement="bottom" title="" data-container="body" data-original-title="Add a new page"><i class="material-icons">control_point</i></a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+{% block scripts %}
+{% if request.user.is_staff %}
+<script>
+showSwal = function(type, id) {
+  if(type == 'warning-message-and-cancel') {
+    console.log(id)
+    swal({
+      title: 'Are you sure?',
+      html: '<p>You won\'t be able to undo this. The page will be gone forever.</p>' +
+            '<a href=\"/pages/delete/' + id + '/" class="btn btn-danger btn-wd" >delete it forever</a>' +
+            '<a href="#" class="btn btn-success btn-wd" onclick="swal.close()" >nevermind!</a>',
+      type: 'warning',
+      showConfirmButton: false,
+      showCancelButton: false,
+    }
+  ).catch(swal.noop)}
+  }
+</script>
+
+{% endif %}
+{% endblock %}

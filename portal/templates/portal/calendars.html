@@ -1,0 +1,40 @@
+{% extends 'portal/base.html' %}
+{% block title %} Calendars{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="nav-center">
+      <ul class="nav nav-pills nav-pills-info nav-pills-icons" role="tablist">
+        {% for tab in tabs %}
+        {% if tab.admin_only and user.is_staff or not tab.admin_only %}
+        <li class="{% if forloop.first %}active{% endif %}">
+          <a href="#{{ tab.customurl }}" role="tab" data-toggle="tab" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+            <i class="material-icons">{{ tab.icon }}</i> {{ tab.title }}
+          </a>
+        </li>
+        {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="tab-content">
+      {% for tab in tabs %}
+      {% if tab.admin_only and user.is_staff or not tab.admin_only %}
+      <div class="tab-pane {% if forloop.first %}active{% endif %}" id="{{ tab.customurl }}">
+        <div class="card">
+          <div class="card-content">
+            {{ tab.content|safe }}
+            {% if user.is_staff %}<div class="text-center"><a href="/tabs/edit/{{ tab.id }}" class="btn btn-sm btn-primary btn-icon"><i class="material-icons">edit</i> Edit this tab</a></div>{% endif %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+{% include "portal/components/form-prefiller.html" %}
+{% endblock %}

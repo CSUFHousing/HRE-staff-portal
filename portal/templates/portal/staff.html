@@ -1,0 +1,190 @@
+{% extends 'portal/base.html' %}
+{% block title %}Staff Directory{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="card">
+    <div class="card-header card-header-icon" data-background-color="green">
+      <i class="material-icons">people</i>
+    </div>
+    <div class="card-content">
+      <h4 class="card-title">Staff Directory</h4>
+      <div class="material-datatables">
+        <div class="toolbar"></div>
+        <div id="datatables_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+          <table id="datatables" class="table table-striped table-no-bordered table-hover dataTable dtr-inline" style="width: 100%;" role="grid" aria-describedby="datatables_info" width="100%" cellspacing="0">
+            <thead>
+              <tr role="row">
+                <th>Last <span class="hidden-sm hidden-xs"> Name</span></th>
+                <th>First <span class="hidden-sm hidden-xs"> Name</span></th>
+                <th>Phone</th>
+                <th class="hidden-xs hidden-sm">Email Address</th>
+                <th>Birthday</th>
+                {% if request.user.is_staff %}<th class="hidden-xs hidden-sm">Actions</th>{% endif %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for staff in employees %}
+              {% if staff.user.is_active %}
+              <tr>
+                <td>{{ staff.user.last_name }}</td>
+                <td><strong><a href="/staff/{{ staff.user.username }}">{{ staff.user.first_name }}</a></strong></td>
+                <td>{{ staff.phone }}</td>
+                <td class="hidden-xs hidden-sm"><a href="mailto:{{ staff.user.email }}">{{ staff.user.email }}</a></td>
+                <td>{{ staff.birthday|date:"F j" }}</td>
+                {% if request.user.is_staff %}
+                <td class="hidden-xs hidden-sm">
+                  <div class="btn-group">
+                    <a class="btn btn-xs btn-info" href="/admin/auth/user/{{ staff.user.id }}/change/" data-toggle="tooltip" data-placement="left" title="" data-container="body" data-original-title="Edit user details">
+                      <i class="material-icons">create</i>
+                    </a>
+                    <button class="btn btn-xs btn-danger" onclick="showSwal('warning-message-and-cancel', {{staff.user.id}})" data-toggle="tooltip" data-placement="left" title="" data-container="body" data-original-title="Remove Portal Access">
+                      <i class="material-icons">block</i>
+                    </button>
+                  </div>
+                </td>
+                {% endif %}
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% if request.user.is_staff %}
+<div class="row">
+  <div class="col-md-5">
+    <div class="card">
+      <div class="card-header card-header-icon" data-background-color="blue">
+        <i class="material-icons">group_add</i>
+      </div>
+      <div class="card-content">
+        <h4 class="card-title">Quick Add Staff Member &nbsp; <small class="category hidden-xs">for student staff only</small></h4>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group label-floating">
+                <label class="control-label" for="{{ form.fname.id_for_label }}">{{ form.fname.label }}</label>
+                {{ form.fname }}
+              </div>
+              <div class="form-group label-floating">
+                <label class="control-label" for="{{ form.lname.id_for_label }}">{{ form.lname.label }}</label>
+                {{ form.lname }}
+              </div>
+              <div class="form-group label-floating">
+                <label class="control-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-2">
+              <button id="usergen" title="Generate Username" class="btn btn-sm btn-round btn-just-icon btn-success"><i class="material-icons">forward</i></button>
+            </div>
+            <div class="col-xs-10">
+              <div class="form-group label-floating">
+                <label class="control-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                {{ form.username }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-6">
+              {{ form.title.label_tag }}<br />
+              {{ form.title }}
+            </div>
+            <div class="col-xs-12 col-sm-6">
+              {{ form.pronouns.label_tag }}<br />
+              {{ form.pronouns }}
+            </div>
+            <div class="col-xs-12">
+              <div class="form-group label-floating">
+                <label class="control-label" for="{{ form.birthday.id_for_label }}">{{ form.birthday.label }}</label>
+                {{ form.birthday }}
+                <span class="material-input"></span>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              {{ form.building.label_tag }}<br />
+              {{ form.building }}
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group label-floating">
+                <label class="control-label" for="{{ form.room.id_for_label }}">{{ form.room.label }}</label>
+                {{ form.room }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12" style="display: none;" id="passinfo">
+              <p>This user's password will be <strong class="text-success"><span id="passgen"> - </span></strong>. They will be instructed to change it manually when they log in.</p>
+              <p>If you need to make any changes after creating this user, click 'Add or Modify Staff' in the sidebar.</p>
+            </div>
+          </div>
+          <button id="createuser" class="btn btn-sm btn-info" style="display: none;"><i class="material-icons">add_circle_outline</i> Create User</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+{% endblock %}
+{% if request.user.is_staff %}
+{% block scripts %}
+<script>
+showSwal = function(type, id) {
+  if(type == 'warning-message-and-cancel') {
+    console.log(id)
+    swal({
+      title: 'Are you sure?',
+      html: '<p>If you set this user as inactive, they will no longer be able to access this portal.</p>' +
+      '<p class="small">This action is not permanent; you can reactivate their account later if you need to.</p>' +
+      '<a href=\"/unactivate/' + id + '/" class="btn btn-danger btn-wd" >Remove their access</a>' +
+      '<a href="#" class="btn btn-success btn-wd" onclick="swal.close()" >nevermind!</a>',
+      type: 'warning',
+      showConfirmButton: false,
+      showCancelButton: false,
+    }
+  ).catch(swal.noop)}
+}
+$('.datepicker').datetimepicker({
+  format: 'MM/DD/YYYY',
+  icons: {
+    time: "fa fa-clock-o",
+    date: "fa fa-calendar",
+    up: "fa fa-chevron-up",
+    down: "fa fa-chevron-down",
+    previous: 'fa fa-chevron-left',
+    next: 'fa fa-chevron-right',
+    today: 'fa fa-screenshot',
+    clear: 'fa fa-trash',
+    close: 'fa fa-remove',
+    inline: true
+  }
+});
+$('#usergen').on('click', function (event) {
+  event.preventDefault();
+  $('#id_username')[0].value = $('#id_fname').val()[0].toLowerCase() + $('#id_lname').val().toLowerCase();
+  $('#id_username').parent().removeClass('is-empty');
+  $('#id_username').focusin();
+  $('#passinfo').show();
+  $('#createuser').show();
+});
+$('#id_fname').on('change', function () {
+  var pass = $('#id_fname').val().toLowerCase() + '57';
+  $('#passgen').html(pass);
+});
+$('#id_birthday').on('focusout', function () {
+  $('#id_birthday').parent().removeClass('is-empty');
+})
+
+</script>
+
+{% endblock %}
+{% endif %}

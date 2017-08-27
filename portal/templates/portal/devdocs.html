@@ -1,0 +1,432 @@
+{% extends 'portal/base.html' %}
+
+{% block title %}Portal Documentation{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-xs-12">
+    <h1 class="text-center">Staff Portal Developer Documentation</h1>
+    <div class="nav-center">
+      <ul class="nav nav-pills nav-pills-info nav-pills-icons" role="tablist">
+        <li class="active">
+          <a href="#basics" role="tab" data-toggle="tab" aria-expanded="true">
+            <i class="material-icons">info</i> <span class="hidden-xs">Intro and Basics</span>
+          </a>
+        </li>
+        <li class="">
+          <a href="#models" role="tab" data-toggle="tab" aria-expanded="false">
+            <i class="material-icons">save</i> <span class="hidden-xs">Models</span>
+          </a>
+        </li>
+        <li class="">
+          <a href="#views" role="tab" data-toggle="tab" aria-expanded="false">
+            <i class="material-icons">explore</i> <span class="hidden-xs">Views and URLs</span>
+          </a>
+        </li>
+        <li class="">
+          <a href="#templates" role="tab" data-toggle="tab" aria-expanded="false">
+            <i class="material-icons">web</i> <span class="hidden-xs">Templates</span>
+          </a>
+        </li>
+        <li class="">
+          <a href="#todo" role="tab" data-toggle="tab" aria-expanded="false">
+            <i class="material-icons">assignment</i><span class="hidden-xs">To-Do List</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane active" id="basics">
+        <h2>The Basics</h2>
+        <h3>This portal runs on <a href="https://www.djangoproject.com/" target="_blank">Django</a>, a web development framework that uses the Python programming language.</h3>
+        <p>In order to do regular maintenace on this portal, you only need a basic understanding of Python, but you should be <strong>extremely comfortable with HTML and CSS</strong>. In order to work on the server, you need some knowledge of bash, too. Lastly, some knowledge of JavaScript will help with fancy ease-of-use features, but isn't necessary. The backend database that stores data for the portal is SQLite3, but you won't ever have to write any SQL (Django does it for you)</p>
+        <h3>Hosting Information</h3>
+        <p>This portal is publicly accessible at <a href="https://csufhousing.Pythonanywhere.com/">https://csufhousing.Pythonanywhere.com/</a> - it's hosted with a free service called PythonAnywhere. Our PythonAnywhere account gives us access to a server where the code for this portal lives. The code is hosted in a Github repository for easy add-commit-push-pull style editing to source code, <strong>but the goal of this Portal is for future staff to NOT have to edit source code.</strong></p>
+        <h3>How to access source code</h3>
+        <p>The source code for this project lives at <a href="https://github.com/higgottluke/HRE-staff-portal">https://github.com/higgottluke/HRE-staff-portal</a>. It will, in the future, be moved to a github repository owned by CSUF Housing.</p>
+        <p>To access our PythonAnywhere server, log in to the web interface for the server at <a href="https://pythonanywhere.com/">pythonanywhere.com</a>. You can use the console in Virtualenv to do most of what you need to do. You can also access some settings and log files in the Web tab.</p>
+        <h2>Diving into Django</h2>
+        <p class="text-muted">If you've never worked with Django, before you start working on this portal, consider checking out online tutorials like <a href="https://tutorial.djangogirls.org/en/">Django Girls</a>, and <strong>make sure you read the <a href="https://docs.djangoproject.com/en/1.11/">Django Documentation.</a></strong></p>
+        <h3>How Django Works</h3>
+        <p><strong>Django takes information from HTTP requests and takes actions based on instructions written with Python to handle tasks like: </strong></p>
+        <ul>
+          <li>Creating, viewing, updating, and deleting data in a database</li>
+          <li>Logging users in and out</li>
+          <li>Rendering HTML content to user clients after filling in HTML templates with Python-generated context</li>
+        </ul>
+        <p><strong>Django takes a twist on the standard 'MVC' pattern</strong>. Instead of the classic 'Model-View-Controller' layers, Django uses a <strong>'Model-Template-View'</strong> pattern:</p>
+        <ul>
+          <li><strong>The Model Layer</strong> contains instructions that defines database tables and relationships. Some of it is custom-written, like the models for portal Pages and homepage Posts. Other data, like Users, is built into Django. Lastly, we've implemented an Employee model that is built on top of the Django User model with a one-to-one relationship. <span class="text-muted">See 'models.py' below.</span></li>
+          <li><strong>The Template Layer</strong> is almost entirely just HTML files with a simple twist - there's special characters in HTML files that Django translates into Python instructions to change the content on a page. Templates are how to give Django instructions like 'here is how I want the information to be presented'.</li>
+          <li><strong>The View Layer</strong> is an intermediary between the Model and Template layers - it controls the information that Django pulls out of Models and renders into Templates to be sent to the user. The View Layer also handles permissions and processing form data. <span class="text-muted">See the 'Views and URLs' tab above.</span></li>
+        </ul>
+        <h3>Folder Structure</h3>
+        <ul>HRE-Staff-Portal/
+          <li>mysite/  <span class="text-muted small">contains top-level application settings</span>
+            <ul>
+              <li>settings.py <span class="text-muted small">django application configuration - edit with caution</span></li>
+              <li>urls.py <span class="text-muted small">site-level URL configuration. Don't edit this one.</span></li>
+              <li>wsgi.py <span class="text-muted small">this is called a 'web server gateway interface'. Just don't touch it.</span></li>
+            </ul>
+          </li>
+          <li>portal/  <span class="text-muted small">all the stuff that makes our Django application unique lives here</span>
+            <ul>
+              <li>migrations/  <span class="text-muted small">instructions for the database. Automatically generated - don't touch this folder</span></li>
+              <li>static/  <span class="text-muted small">home for static files like HTML, CSS, and JavaScript</span></li>
+              <li>templates/  <span class="text-muted small">Remember when we mentioned the Template Layer earlier? Here is where all your HTML templates live.</span>
+                <ul>
+                  <li>portal/  <span class="text-muted small">most of your templates go here.</span></li>
+                  <ul><li>components/  <span class="text-muted small">small chunks of HTML that get used in more than one place, not full pages. </span></li></ul>
+                  <li>registration/  <span class="text-muted small">user authnetication templates go in this folder.</span></li>
+                </ul>
+              </li>
+              <li>templatetags/  <span class="text-muted small"></span>
+                <ul>
+                  <li>customtags.py <span class="text-muted small">This file lets you write your own template tags and filters. More on templates later.</span></li>
+                </ul>
+              </li>
+              <li>admin.py <span class="text-muted small">this file tells Django how to set up its built-in admin interface. See 'The Django Admin' below.</span></li>
+              <li>apps.py <span class="text-muted small">ignore this file - it really doesn't do anything</span></li>
+              <li>client_secret.json <span class="text-muted small">contains authentication info for google drive API, but this isn't implemeneted right now. ignore this file.</span></li>
+              <li>context_processors.py <span class="text-muted small">contains functions for adding variables to the global template context, including RCR statistics data</span></li>
+              <li>forms.py <span class="text-muted small">instructions for rendering forms for models into HTML templates</span></li>
+              <li>json_interpreter.py <span class="text-muted small">contains instructions for converting CognitoForms JSON data into database objects (for RCR stats)</span></li>
+              <li>middleware.py <span class="text-muted small">defines some actions that Django takes in between HTTP requests</span></li>
+              <li>models.py <span class="text-muted small">defines all of our custom database models, their attributes, and available methods. this file is very important</span></li>
+              <li>quickstart.py <span class="text-muted small">contains code for setting up initial connection to google drive API.</span></li>
+              <li>rcrstorage.py <span class="text-muted small">contains code to send RCR data to a google spreadsheet. works in testing on a local project copy, doesn't work in production :(</span></li>
+              <li>tests.py <span class="text-muted small">a future project - search the django docs for testing.</span></li>
+              <li>urls.py <span class="text-muted small">similar to mysite/urls.py, except that this file handles URLs related to our portal (and not the Django Admin). This file tells Django which view to call based on the information in an HTTP Request.</span></li>
+              <li>views.py <span class="text-muted small">instructions for processing HTTP requests, including accessing database data and loading it into templates, defining access permissions, and handling form data</span></li>
+            </ul>
+          </li>
+          <li>static/  <span class="text-muted small">this folder is generated automatically - don't actually edit anything here. See 'Static Files' below</span></li>
+          <li>media/  <span class="text-muted small">stores images that are uploaded by users for their profile picture - don't edit these directly</span></li>
+          <li>venv/  <span class="text-muted small">a Virtual Environment - this is where the Django source code lives. See 'The Virtual Environment' below. Django reads our custom code in mysite/ and portal/ and takes care of all the other tasks involved with running a web application through the code in this folder.</span></li>
+          <li>db.sqlite3  <span class="text-muted small">a database file. You won't ever need to touch this directly.</span></li>
+          <li>manage.py  <span class="text-muted small">utility file that you can run in a bash console like <code>$ Python manage.py runserver</code>, for example</span></li>
+        </ul>
+        <h4>Note about Python module and file syntax</h4>
+        <p>In .py files, you'll find import statements at the top of each file that use dot notation instead of the slash notation you're probably used to seeing. For example:</p>
+        <pre>from .models import Employee</pre>
+        <p>This means "access the file named models.py in the current directory and import the object named Employee" (where the imported object can be any variable like a class, method, dictionary, list, etc.)</p>
+        <pre>from django.contrib.auth.models import User</pre>
+        <p>This slightly more complicated statement means "from whatever 'django' refers to (search the djangodocs for $PYTHONPATH - but in this case, it's located in <samp>venv/lib/Python3.5/site-packages/django/</samp>), access the file at the path <samp>django/contrib/auth/models.py</samp> and import the object named User"</p>
+        <h3>How to use <samp>manage.py</samp> and other command line tools</h3>
+        <p>This section details how to use <samp>manage.py</samp> from a bash console as a command line tool, either on the PythonAnywhere server or with a local copy of the project.</p>
+        <ol>
+          <li>Either on the PythonAnywhere server or with a local copy of the project, navigate to the folder that contains <samp>manage.py</samp>: <code>$ cd HRE-staff-portal/</code>
+          </li>
+          <li>Active the python virtual environment for the project:<br />
+            <ul>
+              <li><strong>With a local copy of the code,</strong> run the bash command to activate the project's virtual environment: <code>$ source venv/bin/activate </code>.</li>
+              <li><strong>When you're doing work on the PythonAnywhere server,</strong> on the 'Consoles' tab, click 'Bash console in virtualenv venv'.</li>
+            </ul>
+          </li>
+          <li>Execute a command by running <samp>manage.py</samp> with the <samp>Python</samp> program: <code>$ Python manage.py &lt;command&gt;</code>, where <samp>&lt;command&gt;</samp> is one of the following:</li>
+        </ol>
+        <h4><samp>runserver</samp></h4>
+        <p>This commands starts django's built-in development server. Use this when you're working on a local copy of the project on a personal/work computer. It starts a lightweight server so you can work on your copy of the staff portal at http://127.0.0.1:8000. <strong>Do not run this command on the PythonAnywhere server!</strong> The development server isn't intended for use in production - PythonAnywhere handles running a real server for us.</p>
+        <h4><samp>collectstaic</samp></h4>
+        <p>This command collects all of the static files in your Django project (both those in portal/static) and Django's built-in static files for the Admin) and puts a copy of them into /static. This is important for production because PythonAnywhere serves the static files out of /static instead of routing the requests through Django. <strong>Run this command on the PythonAnywhere server whenever you update a CSS or Javascript file.</strong> Don't bother running this on a local copy of the project - the development server doesn't use it (it serves your files directly out of portal/static).</p>
+        <h4><samp>makemigrations</samp> and <samp>migrate</samp></h4>
+        <p>These two commands translate Python code in <samp>portal/models.py</samp> into SQL instructions for the underlying database. <strong>You will need to run these whenever you make changes to the models in <samp>portal/models.py</samp></strong>. Run <samp>makemigrations</samp> first, and then <samp>migrate</samp>.</p>
+        <h4><samp>shell</samp></h4>
+        <p>This command starts the interactive Python console for use in testing. You can use it to test Python code before you implement it in files like <samp>views.py</samp> and <samp>models.py</samp>.</p>
+        <h4><samp>dbshell</samp></h4>
+        <p>Similar to <samp>shell</samp>, this command starts the SQLite3 console for interacting with the underlying database. Use this with caution - it's recommended that you instead use <samp>shell</samp> and access database objects through Python methods.</p>
+        <h4><samp>changepassword [username]</samp></h4>
+        <p>Self-explanatory - use this command to change a user's password from the command line. You should only need to do this if you forgot your own password. Superusers can change any other user's password through the Django Admin - this is the safer way because it is logged for future reference.</p>
+        <h4><samp>createsuperuser</samp></h4>
+        <p>Creates a new user with superuser permissions. It will prompt you to enter their name, username, email address, and password. Again, it's safer to do this through the Django Admin.</p>
+        <p><strong>Note</strong> that you can also programatically grant superuser status to users through <code>$ python manage.py shell</code> by accessing User or Employee objects:</p>
+        <div class="row">
+        <pre class="col-md-6">&gt;&gt;&gt; from django.contrib.auth.models import User
+&gt;&gt;&gt; myuser = User.objects.get(id=4)
+&gt;&gt;&gt; myuser.is_superuser = True
+&gt;&gt;&gt; myuser.save()</pre>
+        <pre class="col-md-6">&gt;&gt;&gt; from portal.models import Employee
+&gt;&gt;&gt; emp = Employee.objects.get(id=4)
+&gt;&gt;&gt; emp.user.is_superuser = True
+&gt;&gt;&gt; emp.user.save()
+&gt;&gt;&gt; emp.save()</pre>
+      </div>
+      </div>
+      <div class="tab-pane" id="models">
+        <h2>Models.py</h2>
+        <p>Like we discussed before, models.py defines the objects in our portal database, their attributes, methods, and relationships to other models.</p>
+        <div class="card">
+          <div class="card-header card-header-icon" data-background-color="orange">
+            <i class="material-icons">arrow_forward</i>
+          </div>
+          <div class="card-content">
+            <h4 class="card-title">If you make a change to <samp>models.py</samp></h4>
+            <p>Depending on the change you make, you may have to 'migrate' the django database. See the Intro and Basics information about <samp>manage.py</samp> and <samp>makemigrations/migrate</samp>. There are comments in <samp>models.py</samp> that detail further instructions about the steps you have to take to correctly implement changes.</p>
+          </div>
+        </div>
+        <p>Models in <samp>portal/models.py</samp> are always subclassed from <samp>django.db.models.Model</samp>, so they inherit some default methods and attributes that are available to all Django database models. Sometimes, it becomes useful to override these.</p>
+        <code>__str__</code> and <code>__repr__</code>: These built-in methods are called automatically when you reference an object of a model without accessing any of its attributes. __str__ means 'string' - it's called in places that expect human-readable output. __repr__ means 'representation' - it's called in places where it's appropriate to show more raw representations of data.<br />
+        <pre>
+&gt;&gt;&gt; from portal.models import Employee
+&gt;&gt;&gt; emp = Employee.objects.get(id=1)
+&gt;&gt;&gt; emp
+&lt;Employee:Luke Higgott&gt; # this is actually the same output as calling emp.__repr__()
+&gt;&gt;&gt; print(emp)
+Luke Higgott # but calling the print() method converts to human-readable output by calling emp.__str__() instead</pre>
+          <p>There are currently the following three models:</p>
+          <h3>Employees</h3>
+          <p>The 'Employee' model is a special model that has a <strong>one-to-one</strong> relationship with Django's built-in User model. We can't easily make changes to Django's built-in features (or rather, we can, becaue Django is open source, but this method is easier and cleaner), so we instead build a model that acts as a second layer on top of Django Users.</p>
+          <p>The one-to-one relationship with django Users means that <strong>every time a staff member creates a new account for a User, they have to also fill in the rest of the attributes of an Employee object</strong>, and the two become related. If one is deleted, the other is deleted too.</p>
+          <p>Employee objects have the following attributes: <strong>Department, Title, Phone, Building, Room, Birthday, Supervisor, and User</strong>, where Supervisor is a many-to-one relationship with another Employee, and User is the attribute that connects the Employee to its underlying Django User object. Additionally, Employee objects have the following methods: <strong><samp>get_initials()</samp>, <samp>notify(context, message)</samp> and <samp>save()</samp></strong>, where <samp>notify()</samp> takes two arguments to send a Notification object to that Employee (see Notifications below), and <samp>save()</samp> is an override of the standard model save method built into Django. <samp>save()</samp> is overridden to automatically format phone numbers first, then it calls the real <samp>save()</samp> method.</p>
+          <p>Employee objects also have access to the attributes and methods of the Django User model, which cover the basics like <strong>First Name, Last Name, Email Address, Username, and Password</strong>. The User model also includes methods like <samp>get_full_name(), has_perm(permission), set_password(password)</samp>, etc. We'll cover authentication and permissions later. You can access these by referencing the user attribute of an employee, but not directly through the employee object:</p>
+          <pre>&gt;&gt;&gt; from portal.models import Employee
+&gt;&gt;&gt; emp = Employee.objects.get(id=1)
+&gt;&gt;&gt; emp.user.first_name
+'Luke'
+&gt;&gt;&gt; emp.first_name
+Traceback (most recent call last):
+  File "&lt;console&gt;", line 1, in &lt;module&gt;
+AttributeError: 'Employee' object has no attribute 'first_name'</pre>
+            <h3>Posts</h3>
+            <p>The 'Post' model is the container for the posts on the portal homepage. It has the following attributes: <strong>Title, content, created_date, published_date, header_color, and admin_only</strong>. The difference between created_date and published_date is that created_date is the date the post was originally created, and published_date is udpated every time the post is edited. admin_only is a true/false value that dictates if the post is visible only to Portal Administrators (true) or to all employees (false).</p>
+            <p>Post objects have the following methods available: <samp>get_cname()</samp> and an overridden <samp>save()</samp> method. <samp>get_cname()</samp> just returns 'post' - it's used in the template <samp>portal/templates/portal/editor.html</samp>. The <samp>save()</samp> override updates published_date whenever the post is edited and saved.</p>
+            <div class="card">
+              <div class="card-header card-header-icon" data-background-color="red">
+                <i class="material-icons">warning</i>
+              </div>
+              <div class="card-content">
+                <h4 class="card-title">A note about the 'Content' attribute</h4>
+                <p><samp>Post.content</samp> is a field that can accept any length of unicode text, because it's designed to be able to accept fully formed HTML and CSS. Django has built-in protections against XSS attacks and JavaScript and SQL injections, so by default, when you render <samp>Post.content</samp> into a template, all the special characters will be escaped. To prevent this and allow posts to have full HTML, include the 'safe' template filter: <samp>{% verbatim %}{{ Post.content|safe }}{% endverbatim %}</samp></p>
+              </div>
+            </div>
+            <h3>Pages</h3>
+            <p>The 'Page' model is almost identical to the 'Post' model - it holds the data for the custom portal pages that Portal Administrators can create interactively. <strong>This portal documentation is not a Page object</strong> - it's a plain template (<samp>portal/templates/portal/devdocs.html</samp>) with a literally mapped url and view.</p>
+            <h3>Tabbed Page Content</h3>
+            <p>These objects are inherited from Pages and work the same way, except they have a Parent attribute that dictates which one of the Tabbed Pages they fall under (where the choices are Calendars, Programming, Marketing, and Full-Time Staff Resources).</p>
+            <h3>Notifications</h3>
+            <p>Are similar to the django messages framework, except that they persist through pageloads and are tied to a specific user. Notifications have the following attributes: <strong>to, message, context, unread, and sent_date</strong>, where 'to' is a foreign key to an Employee object, context is a choice of standard status contexts (info, warning, etc.), and unread is a true/false flag.</p>
+            <h4><strong>Sending Notifications</strong></h4>
+            <p>Can be done using the <samp>Employee.notify()</samp> method of an Employee object. Additionally, <samp>portal.models</samp> defines a <samp>notify_devs()</samp> function that sends a notification to every Employee who has superuser status. You can import this function in any other file in the project by using <code>from portal.models import notify_devs</code>.</p>
+            <p>Alternatively, superusers can also use the Django Admin to create a new notification object and assign it to a user. In current production set-up, Portal Administrators don't have permission to see Notifications in the admin.</p>
+
+          </div>
+          <div class="tab-pane" id="views">
+            <h2>Views.py</h2>
+            <p>This file contains methods or classes that handle HTTP requests and decide what action to take or what information to send back to the user. <samp>views.py</samp> handles things like processing form data, authenticating users, checking permissions, and accessing data from the underlying database.</p>
+            <h4>The standard funciton-based view syntax:</h4>
+<pre>@login_required
+def home(request):
+  posts = Post.objects.all().order_by('-published_date')
+  return render(request, 'portal/home.html', {'posts': posts})</pre>
+            <p>Let's take a look at each of the pieces here.</p>
+              <ul>
+              <li><strong><samp>@login_required</samp></strong> is an access control decorator. See 'Access Control in views' below.</li>
+              <li><samp><strong>def home(request):</strong></samp> is the function definition, where 'home' is the name of the view (the name that should be refenced in <samp>urls.py</samp>). Every view takes a <samp>request</samp> as an argument - it contains data about the HTTP request, who sent it, etc. Some views take additional arguments in the URL string (like <samp>portal.views.custom_page</samp>).</li>
+              <li><samp><strong>posts = Post.objects.all().order_by('-published_date')</strong></samp> is a method call to access data from the database. In this case, the right-hand-side of the equals sign retrieves a list of homepage posts from the database, ordered with the newest posts first. That list gets assigned into the 'posts' variable. </li>
+              <li><samp><strong>return render(request, 'portal/home.html', {'posts': posts})</strong></samp> is the function's return statement that sends instructions back to Django to tell it what content to send back to the user. <samp>render(request, template, context)</samp> is a function that sends content back to the user. the template argument should be an html file, and the context variable is a dictionary of variables that will become available for use in the html template.
+              <ul>
+                <li>In this case, the <samp>home</samp> view's <samp>render()</samp> function tells Django to use the <samp>portal/home.html</samp> template, and passes it a dictionary that tells Django "you can reference the variable 'posts' in the template to access the 'posts' list that we just declared"</li>
+              </ul></li>
+            </ul>
+            <h4>Access Control in views</h4>
+            <p>Django handles access control checking by using <strong>decorators</strong>. A decorators are a special kind of Python function that 'decorates' the function that's defined on the next line below it.</p>
+            <ul>
+              <li><samp><strong>@login_required</strong></samp> forces Django to only call the view function if the  request is coming from a logged in, authenticated user. If not, it redirects to the login page.</li>
+              <li><samp><strong>@staff_member_required</strong></samp> forces Django to only call the view function if the reequest is coming from a logged in, authenicated user <strong>whose <samp>is_staff</samp> attribute is True</strong>.</li>
+              <li><samp><strong>@user_passes_test(function)</strong></samp> allows you to define a custom test to determine if the request can access the view. The argument should be a function that returns either True or False. In our <samp>views.py</samp>, we use this decorator to restrict access to these developer docs to requests that come from a logged in superuser.</li>
+            </ul>
+            <h4>Database calls in views</h4>
+            <p>In order to pull data out of the database, use the methods built into <samp>&lt;Model&gt;.Objects</samp>. The most common you'll use are: </p>
+            <ul>
+              <li><code>&gt;&gt;&gt; everyting = Post.objects.all()</code> - this stores every Post object in a queryset object called 'everything'.</li>
+              <li><code>&gt;&gt;&gt; myuser = Employee.objects.get(id=1)</code> - the <samp>get(query)</samp> method allows you to pull out a single object that matches the given query. Note that this will throw an error if you give it a query for a non-unique value and it returns more than one object.</li>
+            </ul>
+            <p>After you have a queryset or an object as a result, you can do operations like filtering and sorting. See the Django documentation for more details.</p>
+            <h4>Form Processing in views</h4>
+            <p>Each view function can handle different HTTP request verbs by using an if/else block:</p>
+<pre>def page_with_form(request):
+  if request.method == 'GET':
+    return render(...)
+  elif request.method == 'POST':
+    # do some form processing
+    return render(...)
+    # or even return redirect(...)</pre>
+            <p>Form data in Django is stored in <samp>request.POST</samp>.</p>
+            <h2>Urls.py</h2>
+            <p>This file dictates which view Django sends requests to based on the address of the request. Here is the current content of urls.py:</p>
+            <pre>{{ urlconf }}</pre>
+            <p>In the <samp>urlpatterns</samp> list, each item is an object of the <samp>django.conf.urls.url</samp> class. Each <samp>url</samp> object has these arguments (the first two are mandatory):</p>
+            <ol>
+              <li>A regular expression representing the string at the end of the url. Don't include the leading slash.</li>
+              <li>A reference to an object in <samp>portal.views</samp>. These can either be a function or a class. Note that the views related to user authentication call a view from <samp>auth_views</samp>, because these are built into Django.</li>
+              <li><italic>Optionally,</italic> a dictionary of context to be made available to the view and template being called (this is only used for the auth_views).</li>
+              <li>A name. These can be used in other modules to access that particular view or redirect a user using namespacing.</li>
+            </ol>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="orange">
+                      <i class="material-icons">do_not_disturb</i>
+                    </div>
+                    <div class="card-content">
+                      <h4 class="card-title">What happens if a URL isn't mapped?</h4>
+                      <p>If a user tries to access a url that doesn't exist,</p>
+                      <p><strong>if <samp>mysite.settings.DEBUG is False</samp></strong> (production), Django will render a standard 404 (HTTP not found) page using the template <samp>portal/templates/404.html</samp></p>
+                      <p><strong>if <samp>mysite.settings.DEBUG is True</samp></strong> (development), Django will render the built-in 404 page that shows the URLconf and all the URLs that didn't match the request.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header card-header-icon" data-background-color="red">
+                      <i class="material-icons">warning</i>
+                    </div>
+                    <div class="card-content">
+                      <h4 class="card-title">All URLs must map to a view <strong>that exists.</strong></h4>
+                      <p>If a url object in <samp>urls.py</samp> refers to an object in <samp>views.py</samp> that doesn't exist, <strong class="text-danger">the entire Django server will stop handling requests until you fix it!</strong> If you leave it unfixed for too long, you may have to reload the PythonAnywhere app or restart the development server as Django will stop watching the file after a certain amount of time.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h4>Namespacing</h4>
+              <p>Namespacing allows for the use of some utility functions that take either a url or a view as an argument. For example - <samp>redirect('portal:home')</samp> will work the same as <samp>redirect('/')</samp></p>
+              <h4>URLs that accept and return an argument to the server</h4>
+              <p>Some URLs need to read in additional data and send them to your view as an argument, like <samp>portal.views.post_edit</samp>, which accepts both a request and an id. The id is captured in the URL as part of the regex: <samp>/post/edit/<strong>([0-9]*)</strong></samp>. This is regular expression that tells Django, "store whatever DIGITS come after <samp>post/edit/</samp> and give them to whatever view it corresponds to."</p>
+            </div>
+            <div class="tab-pane" id="templates">
+              <h2>Templates</h2>
+              <p>Templates are html files that include django template engine variables, tags, and filters in the html. Before Django sends HTML output to the user, it processes the information in templates into fully formatted HTML based on the context passed into the template by context processors and views.</p>
+              <p><strong>Refer to the full Django template tags and filters documentation at <a href="https://docs.djangoproject.com/en/1.10/ref/templates/builtins/">https://docs.djangoproject.com/en/1.10/ref/templates/builtins/</a>.</strong></p>
+              <h3>The Base Template</h3>
+              <p>Located at <samp>portal/templates/portal/base.html</samp>, the base template contains all the HTML <samp>&lt;head&gt;</samp> information, the HTML for the sidebar and other navigation elements, the footer, and links to static files. In other words, base.html has all the HTML that should be included <strong>on every page.</strong></p>
+              <p>Every other template in the project (except <samp>portal/templates/registration/login.html</samp>, which uses the <samp>portal/templates/portal/external-base.html</samp> template), <italic>extends</italic> base.html by filling in a {% verbatim %}<samp>{% block content %}</samp> {% endverbatim %} tag in the middle.</p>
+              <p><strong>Template Extending</strong> requires that every template that we want to be loaded into the standard base template start with the template tag {% verbatim %}<samp>{% extends 'portal/base.html' %}</samp> and the rest of the page content should be between a matching <samp>{% block content %}</samp> and <samp>{% endblock %}</samp>.</p>{% endverbatim %}
+              {% verbatim %}<p><strong>Page-Level JavaScript</strong> is possible to include on individual templates. At the bottom of <samp>base.html</samp>, there is a <samp>{% block scripts %}</samp> that comes after the links to the other static JS files. So, in other templates, after the end of <samp>{% block content %}{% endblock %}</samp>, you may add a <samp>{% block scripts %}</samp>, write some JavaScript, and then <samp>{% endblock %}</samp>.</p>
+              {% endverbatim %}
+              <h3>Template Syntax</h3>
+              {% verbatim %}
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-header" data-background-color="blue">
+                      <h4 class="card-title">Template Variables</h4>
+                      <p class="category">Access data in template context to render into HTML</p>
+                    </div>
+                    <div class="card-content">
+                      <p>Template variables are accessed through double curly braces:</p>
+                      <p><samp>{{ employee }}</samp></p>
+                      <p>You use the same syntax to access model attributes and methods:</p>
+                      <p><samp>{{ post.title }}</samp> or <samp>{{ employee.get_full_name }}</samp></p>
+                      <p><strong>Remember</strong> that variables are made available in templates if they are passed to the template as context in <samp>views.py</samp> or included in a context processor defined in <samp>mysite.settings.TEMPLATES</samp>.</p>
+                      <p>If you try to access a variable that doesn't exist, Django won't throw an error. It will just ignore it and give you a blank space.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                      <h4 class="card-title">Template Tags</h4>
+                      <p class="category">Do special things like flow control logic</p>
+                    </div>
+                    <div class="card-content">
+                      <p>Template tags can basically do anything, and are accessed by using the curly brace-percentage syntax. Here are some examples:</p>
+                      <p>Iterate through a list:</p>
+<pre>{% for person in Employees %}
+&lt;p&gt;{{ person.user.get_full_name }}&lt;/p&gt;
+{% endfor %}</pre>
+                      <p>Check a condition:</p>
+                      <p><code>{% if request.user.is_staff %}<br/> &lt;!-- some html here --&gt;<br /> {% endif %}</code></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-header" data-background-color="orange">
+                      <h4 class="card-title">Template Filters</h4>
+                      <p class="category">Manipulate the data returned by tags or variables</p>
+                    </div>
+                    <div class="card-content">
+                      <p>Accessed by using a pipe '|' after a variable name:</p>
+                      <p><code>{{ employee|upper }}</code></p>
+                      <p>If <samp>employee</samp> is Luke Higgott, <samp>|upper</samp> will return LUKE HIGGOTT.</p>
+                      <p><code>{{ post.title|cut:'o' }}</code></p>
+                      <p>If <samp>post.title</samp> is 'Potato', <samp>|cut:"o"</samp> will return 'Ptat'.</p>
+                      <p><code>{% now|date %}</code></p>
+                      <p><samp>{% now %}</samp> returns the current date and time, and <samp>|date</samp> will apply the standard date and time format for the locale defined in <samp>mysite.settings</samp> to make it easily readable.</p>
+                    </div>
+                  </div>
+                </div>
+                {% endverbatim %}
+              </div>
+              <h3>Template Context Processors</h3>
+              <p>Context processors are defined in <samp>mysite.settings.TEMPLATES</samp>. Context processors are any python function that returns a dictionary. The dictionary they return will make additional variables available in the global template context (usable on any template). Along with all the django built-ins, we have two custom defined:</p>
+              <ul>
+                <li><strong>custom_pages</strong>: this function makes a list of Page objects from the database available in the global context through the{% verbatim %} {{ cpages }} variable.{% endverbatim %} This is necessary to be able to correctly load the sidebar navigation.</li>
+                <li><strong>urlconf</strong>: this function returns the current contents of the file <samp>portal/urls.py</samp>, purely so that it can be displayed in this dev documentation without being hard-coded.</li>
+              </ul>
+              <h3>Using Messages</h3>
+              <p>Django has a built-in system that allows you to render status messages to the user. The location for the messages to appear is already built into the <samp>base.html</samp> template. All you need to do is register a new message (or multiple messages - as many as you want) in a view:</p>
+              <p><code>messages.success(request, 'Your change was made successfully.')</code></p>
+              <p>The syntax in the template that makes the messages appear will render them in the appropriate color based on their status (success, info, warning, error). This is what they look like:</p>
+              <br />
+              <div class="alert alert-success alert-with-icon">
+                <i class="material-icons" data-notify="icon" >check</i>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">x</button>
+                <span data-notify="message"> <b>Success! </b>Your change was made successfully.</span>
+              </div>
+            </div>
+            <div class="tab-pane" id="todo">
+              <h2>To-Do List</h2>
+              <p>There's always room for improvement. Here are some things to consider working on:</p>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                      <h4 class="card-title">Class-Based Views</h4>
+                    </div>
+                    <div class="card-content">
+                      <p>Currently, our project's <samp>views.py</samp> uses function-based views. Django supports writing views as classes, and is encouraging people to transition to class-based views. As of Django 2.0, funciton-based views will be depricated.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header" data-background-color="orange">
+                      <h4 class="card-title">Google Sheets API Integration</h4>
+                    </div>
+                    <div class="card-content">
+                      <p>Currently, CognitoForms send certain forms as POST json data to the portal. We want to take this one step further and send select data to Google Sheets for storage in google drive, but it won't work.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header" data-background-color="blue">
+                      <h4 class="card-title">Creating new Posts and Pages</h4>
+                    </div>
+                    <div class="card-content">
+                      <p>Currently, when a Portal Administrator clicks a button to create a new page or post, Django creates a new, empty object in its database <strong>before</strong> redirecting to the editor to edit the new object.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header" data-background-color="red">
+                      <h4 class="card-title">Handling Email</h4>
+                    </div>
+                    <div class="card-content">
+                      <p>The portal isn't currently able to send emails. We should do this to be able to notify users when... things happen. :)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% endblock %}
+      {% block scripts %}
+      {% endblock %}
