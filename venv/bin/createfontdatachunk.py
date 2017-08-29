@@ -1,4 +1,4 @@
-#!/home/csufhousing/HRE-staff-portal/venv/bin/python3
+#!/Users/zz-lhiggott/HRE-staff-portal/venv/bin/python3.6
 from __future__ import print_function
 import base64
 import os

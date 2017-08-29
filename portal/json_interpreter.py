@@ -3,7 +3,7 @@ from django.db.models.query import QuerySet
 
 from .models import FormData, Employee
 from .models import notify_devs
-from .rcrstorage import send_to_server
+#from .rcrstorage import send_to_server
 
 from datetime import date
 from dateutil.parser import parse as timeparse

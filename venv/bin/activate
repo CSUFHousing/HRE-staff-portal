@@ -1,8 +1,6 @@
 # This file must be used with "source bin/activate" *from bash*
 # you cannot run it directly
 
-export SECRET_KEY="9ljz0j#@ex4u=s%b+df^k4*^qol_k!q5^b&b8fns1t2&&hq8nz"
-
 deactivate () {
     unset -f pydoc >/dev/null 2>&1
 
@@ -42,7 +40,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/csufhousing/HRE-staff-portal/venv"
+VIRTUAL_ENV="/Users/zz-lhiggott/HRE-staff-portal/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
