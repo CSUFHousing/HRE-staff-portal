@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from portal.models import Employee, Page, Post, TabbedPageContent, Notification, FormData
-from API.serializers import EmployeeSerializer, PageSerializer, PostSerializer
+from API.serializers import EmployeeSerializer, PageSerializer, PostSerializer, FDSerializer, NotifSerializer
 
 
 @api_view(['GET'])
@@ -23,11 +23,26 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 class PageViewSet(viewsets.ModelViewSet):
-    queryset = Page.objects.all()
+    queryset = Page.objects.all().filter(tabbedpagecontent__isnull=True)
     serializer_class = PageSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+class NotifViewSet(viewsets.ModelViewSet):
+    queryset = Notificaiton.objects.all()
+    serializer_class = NotifSerial
+    permission_classes = (permissions.IsAuthenticated,)
+
+class FormDataViewSet(viewsets.ModelViewSet):
+    queryset = FormData.objects.all()
+    serializer_class = FDSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+class TabbedContentViewSet(viewsets.ModelViewSet):
+    queryset = TabbedPageContent.objects.all()
+    serializer_class = PageSerializer
     permission_classes = (permissions.IsAuthenticated,)

@@ -26,6 +26,18 @@ class PageSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
 class PostSerializer(serializers.ModelSerializer):
+    #last_published_by = serializers.HyperlinkedRelatedField(source='last_published_by.user.username')
     class Meta:
         model = Post
+        fields = ('__all__')
+
+class FDSerializer(serializers.ModelSerializer):
+    #staff = serializers.HyperlinkedRelatedField(source='staff')
+    class Meta:
+        model = FormData
+        fields = ('__all__')
+
+class NotifSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
         fields = ('__all__')
