@@ -112,8 +112,7 @@ class FormDataAdmin(admin.ModelAdmin):
 admin.site.disable_action('delete_selected')
 admin.site.site_title = 'HRE'
 admin.site.index_title = 'Portal Management'
-# we're removing this because we're gonna prefer to
-# mark people as inactive instead of deleting them
+admin.site.site_header = 'HRE Staff Portal Management'
 admin.site.register(Post, PostAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(User, UserAdmin)

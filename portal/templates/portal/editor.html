@@ -100,6 +100,15 @@ tinymce.init({
   height: 800,
   content_css: "{% static 'css/portal.css' %}",
   style_formats: [
+    {title: 'Buttons', items: [
+      {title: 'Blue Button', selector: 'a', classes: 'btn btn-info'},
+      {title: 'Green Button', selector: 'a', classes: 'btn btn-success'},
+      {title: 'Orange Button', selector: 'a', classes: 'btn btn-warning'},
+      {title: 'Red Button', selector: 'a', classes: 'btn btn-danger'},
+      {title: 'Purple Button', selector: 'a', classes: 'btn btn-primary'},
+      {title: 'Rose Button', selector: 'a', classes: 'btn btn-rose'},
+      {title: 'White Button', selector: 'a', classes: 'btn btn-info btn-simple'},
+    ]},
     {title: 'Blue Text', inline: 'strong', classes: 'text-info'},
     {title: 'Green Text', inline: 'strong', classes: 'text-success'},
     {title: 'Orange Text', inline: 'strong', classes: 'text-warning'},

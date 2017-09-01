@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.core.mail import send_mail
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -130,12 +129,6 @@ def post_edit(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Post "{}" was saved successfully.'.format(item.title))
-        #    send_mail(
-        #        'HRE Staff Portal | Post Edited',
-        #        'This is an automatic email from the HRE Staff Portal. You made a change to the post, "{}".'.format(item.title),
-        #        'donotreply@fullerton.edu',
-        #        [request.user.email],
-        #    )
             item.last_published_by = request.user.employee
             item.save()
             notify_devs('info', "{} updated the post: '{}' at {}.".format(request.user.get_full_name(), item.title, datetime.now().strftime('%I:%M %p on %A, %B %d, %Y')))
