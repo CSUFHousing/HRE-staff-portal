@@ -118,6 +118,10 @@ class Employee(models.Model):
             except IndexError:
                 return ''
         return ''
+    class Meta:
+        ordering = ['user__last_name']
+        #order_with_respect_to = 'user'
+        pass
 
     # OVERRIDE of standard save() method to force formatting on phone numbers and resizing images
     def save(self, *args, **kwargs):
@@ -159,6 +163,8 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs) # Call the "real" save() method.
     def __str__(self):
         return self.title
+    class Meta:
+        ordering = ['-published_date']
 
 class Page(models.Model):
     title = models.CharField(max_length=100)
@@ -176,6 +182,8 @@ class Page(models.Model):
         return 'Page'
     def __str__(self):
         return self.title
+    class Meta:
+        ordering = ['-published_date']
 
 class TabbedPageContent(Page):
     parent = models.CharField(choices=TABBED_PAGE_CHOICES, blank=True, null=True, max_length=1)
@@ -197,6 +205,8 @@ class Notification(models.Model):
     def __str__(self):
         string = '{}-level message sent to {}'.format(self.context, self.to)
         return string
+    class Meta:
+        ordering = ['sent_date', 'to__user__last_name']
 
 class FormData(models.Model):
     formID = models.SmallIntegerField(blank=True)
