@@ -20,29 +20,29 @@ def api_root(request, format=None):
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
 class PageViewSet(viewsets.ModelViewSet):
     queryset = Page.objects.all().filter(tabbedpagecontent__isnull=True)
     serializer_class = PageSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
 class NotifViewSet(viewsets.ModelViewSet):
     queryset = Notification.objects.all()
     serializer_class = NotifSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
 
 class FormDataViewSet(viewsets.ModelViewSet):
     queryset = FormData.objects.all()
     serializer_class = FDSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    #permission_classes = (permissions.IsAdminUser,)
 
 class TabbedContentViewSet(viewsets.ModelViewSet):
     queryset = TabbedPageContent.objects.all()
     serializer_class = PageSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    #permission_classes = (permissions.IsAuthenticated,)
