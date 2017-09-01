@@ -33,8 +33,8 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 class NotifViewSet(viewsets.ModelViewSet):
-    queryset = Notificaiton.objects.all()
-    serializer_class = NotifSerial
+    queryset = Notification.objects.all()
+    serializer_class = NotifSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 class FormDataViewSet(viewsets.ModelViewSet):
