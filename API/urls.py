@@ -8,8 +8,9 @@ router = DefaultRouter()
 router.register(r'employees', views.EmployeeViewSet)
 router.register(r'pages', views.PageViewSet)
 router.register(r'post', views.PostViewSet)
-#router.register(r'tabcontent', views.TabContentViewSet)
-#router.register(r'notifs', views.NotifViewSet)
+router.register(r'tabcontent', views.TabbedContentViewSet)
+router.register(r'notifs', views.NotifViewSet)
+router.register(r'formdata', views.FormDataViewSet)
 
 schema_view = get_schema_view(title='Pastebin API')
 
