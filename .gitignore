@@ -7,3 +7,4 @@ __pycache__
 .DS_Store
 mysite/settings.py
 db.sqlite3
+/node_modules
