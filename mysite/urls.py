@@ -14,20 +14,21 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import include, url, handler500
 from django.conf.urls.static import static
+from django.conf.urls import handler500
 from django.contrib import admin
+from django.urls import include, path
 
 # Don't change anything here. Only change /portal/urls.py
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/', include('API.urls')),
-    url(r'', include('portal.urls'))
+    path('admin/', admin.site.urls),
+    path('api/', include('API.urls')),
+    path('', include('portal.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
 
 handler500 = 'portal.views.server_error'

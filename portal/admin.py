@@ -63,7 +63,7 @@ def Title(obj):
     return '{}'.format(obj.employee.title)
 
 class UserAdmin(BaseUserAdmin):
-    list_display = ['first_name', 'last_name', Title, 'email', 'is_staff']
+    list_display = ['first_name', 'last_name', Title, 'email', 'is_staff', 'is_active']
     list_filter = ['is_staff', 'is_active', 'employee__department', 'groups']
     fieldsets = (
     (None, {'fields': ('username', 'password')}),
