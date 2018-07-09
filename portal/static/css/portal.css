@@ -771,3 +771,9 @@ a {
   height: 50px;
   background-color: #e11000;
 }
+.sidebar .sidebar-wrapper, .off-canvas-sidebar .sidebar-wrapper {
+  height: calc(100vh - 82px) !important;
+}
+.main-panel > .content {
+  min-height: calc(100vh - 152px) !important;
+}
