@@ -34,7 +34,6 @@ SECURE_SSL_REDIRECT = True
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -42,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'portal',
+    'django.contrib.admin',
     'API',
     'rest_framework',
 ]
@@ -139,4 +139,3 @@ REST_FRAMEWORK = {
         'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated', 'API.permissions.IsAdminOrReadOnly',],
         'PAGE_SIZE': 20
 }
-
