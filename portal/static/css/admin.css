@@ -1,3 +1,44 @@
+/*
+
+  Overrides of some of the django admin's built-in CSS
+
+*/
+
 body {
-  background-color: pink !important;
+  background-color: white !important;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif !important;
+}
+
+#branding h1, #branding h1 a:link, #branding h1 a:visited, #header {
+  color: #f58220;
+}
+#header, .button, input[type=submit], input[type=button], .submit-row input, a.button {
+  background-color: #00274c;
+}
+#user-tools a:focus, #user-tools a:hover {
+    text-decoration: none;
+    border-bottom-color: #ff8001;
+    color: #ff8001;
+}
+#branding #site-name a, h1 {
+  font-weight: 800;
+}
+.module h2, .module caption, .inline-group h2, div.breadcrumbs {
+  background-color: #0057ab;
+}
+a:link, a:visited {
+  color: #0057ab;
+}
+div.breadcrumbs:not(a) {
+  color: #f58220;
+}
+.selector-chosen h2 {
+  background-color: #00274c !important;
+}
+.help, p.help, form p.help, div.help, form div.help, div.help li {
+  color: #222;
+}
+
+.button.default, input[type=submit].default, .submit-row input.default {
+  background-color: #009874;
 }
