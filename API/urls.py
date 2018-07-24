@@ -19,6 +19,6 @@ schema_view = get_schema_view(title='Pastebin API')
 # Additionally, we include the login URLs for the browsable API.
 urlpatterns = [
     url(r'^schema/$', schema_view),
-    url(r'^slack/$', ),
+    url(r'^slack/$', slack.respond),
     url(r'^', include(router.urls)),
 ]

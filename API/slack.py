@@ -4,9 +4,14 @@ import json
 
 from portal.models import notify_devs
 
-def challenge(request):
+def challenge(request, body):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
-    challenge_val = body['challenge']
-    notify_devs('warning', 'body is: {} and challenge is: {}'.format(str(body), challenge_val))
-    return HTTPResponse(content='challenge_val', content_type='text/plain')
+
+def respond(request):
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    if 'challenge' in body:
+        challenge_val = body['challenge']
+        notify_devs('warning', 'body is: {} and challenge is: {}'.format(str(body), challenge_val))
+        return HTTPResponse(content='challenge_val', content_type='text/plain')
