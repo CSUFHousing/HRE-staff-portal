@@ -260,7 +260,10 @@ def password_generator(request):
     return redirect('/')
 
 def server_error(request):
-    notify_devs('danger', '{} caused a 500 error. Please check the error log for details.'.format(request.user.get_full_name()))
+    try:
+        notify_devs('danger', '{} caused a 500 error. Please check the error log for details.'.format(request.user.get_full_name()))
+    except AttributeError:
+        pass
     messages.error(request, 'Something went wrong trying to process your request. Our web admins have been notified of the error and will try to fix it as soon as possible.')
     return redirect('/')
 
