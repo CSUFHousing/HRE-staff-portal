@@ -1,5 +1,5 @@
 from django.http.response import JsonResponse as JSR
-from django.http.response import HTTPResponse
+from django.http.response import HttpResponse
 import json
 
 from portal.models import notify_devs
