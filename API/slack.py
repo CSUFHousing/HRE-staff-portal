@@ -7,8 +7,9 @@ from portal.models import notify_devs
 
 @csrf_exempt
 def respond(request):
-    body = json.loads(str(request.body))
+    notify_devs('warning',request.body)
+    body = json.loads(request.body)
     if 'challenge' in body:
         challenge_val = body['challenge']
         notify_devs('warning', 'body is: {} and challenge is: {}'.format(str(body), challenge_val))
-        return HTTPResponse(content='challenge_val', content_type='text/plain')
+        return HttpResponse(content=challenge_val, content_type='application/json')
