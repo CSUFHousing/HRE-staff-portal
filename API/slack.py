@@ -12,4 +12,4 @@ def respond(request):
     if 'challenge' in body:
         challenge_val = body['challenge']
         notify_devs('warning', 'body is: {} and challenge is: {}'.format(str(body), challenge_val))
-        return HttpResponse(content=challenge_val, content_type='application/json')
+        return HttpResponse(content=json.dumps({'challenge':challenge_val}), content_type='application/json')
