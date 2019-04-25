@@ -5,11 +5,30 @@ from portal.models import Employee
 
 # Create your models here.
 
+MODEL_TYPE_CHOICES = (('C', 'Computer'), ('M', 'Monitor'), ('D', 'Mobile Device'), ('A', 'Accessory'))
+
+class Model(models.Model):
+    manufacturer = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    type = models.CharField(max_length=1, choices=MODEL_TYPE_CHOICES)
+
+    def __str__(self):
+        return self.manufacturer + ' ' + self.name
+
 
 class Asset(models.Model):
     assigned_user = models.ForeignKey(to=Employee, verbose_name="Assigned to User", on_delete=models.CASCADE, null=True, blank=True)
     asset_tag = models.PositiveIntegerField(null=True, blank=True)
-    model = models.CharField(max_length=60, null=True, blank=True)
+    #
+    # def limit_model_choices(self):
+    #     if hasattr(self, 'computer'):
+    #         return {'type':'C'}
+    #     if hasattr(self, 'monitor'):
+    #         return {'type': 'M'}
+    #     if hasattr(self, 'accessory'):
+    #         return {'type': 'A'}
+    #     if hasattr(self, 'mobiledevice'):
+    #         return {'type': 'D'}
     url = models.URLField(null=True, blank=True, verbose_name="URL")
 
     def __str__(self):
@@ -19,6 +38,8 @@ class Asset(models.Model):
             return self.monitor.__str__()
         if hasattr(self, 'accessory'):
             return self.accessory.__str__()
+        if hasattr(self, 'mobiledevice'):
+            return self.mobiledevice.__str__()
 
     def get_absolute_url(self):
         # return '/technology/user/{}'.format(self.assigned_user.user.username)
@@ -67,6 +88,7 @@ class Monitor(Asset):
     has_builtin_speakers = models.BooleanField(default=False)
     USB_ports = models.PositiveSmallIntegerField(default=0)
     in_use = models.BooleanField(default=False)
+    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type':'M'})
 
     def get_connected_computer(self):
         try:
@@ -85,7 +107,7 @@ class Monitor(Asset):
         s= ''
         if self.monitor.asset_tag:
             s = '{} - '.format(self.monitor.asset_tag)
-        s += '{}'.format(self.monitor.model)
+        s += '{}'.format(self.monitor.model.__str__())
         return s
 
 
@@ -98,6 +120,7 @@ class Computer(Asset):
     name = models.SlugField(unique=True, null=True, blank=True)
     IP_address = models.CharField(null=True, blank=True, max_length=15)
     connected_monitors = models.ManyToManyField(to=Monitor, through='MonitorConnection')
+    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'C'})
 
     def get_absolute_url(self):
         return '/technology/user/lhiggott'
@@ -108,9 +131,9 @@ class Computer(Asset):
             # l = [m.asset_tag for m in self.connected_monitors.all()]
             for m in self.connected_monitors.all():
                 if m.asset_tag:
-                    l.append(str(m.asset_tag))
+                    l.append('{} - {}'.format(m.asset_tag, m.model))
                 else:
-                    l.append("Untagged monitor")
+                    l.append("Untagged {}".format(m.model))
             return ", ".join(l)
         except IndexError:
             return None
@@ -147,8 +170,20 @@ class MonitorConnection(models.Model):
         super().delete(*args, **kwargs)
 
 
+class MobileDevice(Asset):
+    name = models.SlugField(unique=True, null=True, blank=True)
+    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'D'})
+    def __str__(self):
+        s= ''
+        if self.asset_tag:
+            s = '{} - '.format(self.asset_tag)
+        s += '{}'.format(self.model.__str__())
+        return s
+
+
 class Accessory(Asset):
     type = models.CharField(max_length=20)
+    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'A'})
 
     def __str__(self):
         return "{} {}".format(self.type, self.model)

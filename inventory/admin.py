@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.db.models import Q
 from portal.models import notify_devs
 
-from .models import Asset, Accessory, AudioPortType, Computer, DisplayPortType, Monitor, MonitorConnection, OperatingSystem, Note, Ticket
+from .models import Asset, Accessory, AudioPortType, Computer, DisplayPortType, MobileDevice, Model, Monitor, MonitorConnection, OperatingSystem, Note, Ticket
 
 # Register your models here.
 
-for item in [Accessory, AudioPortType, DisplayPortType, OperatingSystem, Note, Ticket]:
+for item in [Accessory, AudioPortType, DisplayPortType, MobileDevice, Model, OperatingSystem, Note, Ticket]:
     admin.site.register(item)
 
 
@@ -51,6 +51,7 @@ class MonitorAdmin(admin.ModelAdmin):
         ),
         ("Device Information",
             {"fields": (
+                ('model'),
                 ('display_inputs', 'audio_inputs'),
                 ('has_builtin_speakers', 'USB_ports')
             )}
