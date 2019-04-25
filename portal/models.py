@@ -118,6 +118,8 @@ class Employee(models.Model):
             except IndexError:
                 return ''
         return ''
+    def has_IT_assets(self):
+        return len(self.asset_set.all())
     class Meta:
         ordering = ['user__last_name']
         #order_with_respect_to = 'user'

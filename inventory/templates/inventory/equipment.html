@@ -1,0 +1,93 @@
+{% extends 'portal/base.html' %}
+{% load humanize %}
+{% block title %}{{ user.first_name }}'s IT Assets{% endblock %}
+{% block content %}
+<div class="row text-center">
+  <div class="alert alert-primary"><h3>This feature set is in development!</h3>
+  <p>Luke is working on a set of tools to keep track of our technology inventory through the HRE Staff Portal.</p>
+  <p>If you have suggestions for features here, please let him know.</p>
+  </div>
+  <hr>
+</div>
+<div class="row">
+  {% for a in assets %}
+  <div class="col-sm-5">
+  <div class="card">
+    {% if a.computer %}
+    <!-- computer -->
+    <div class="card-header card-header-icon " data-background-color="green">
+      <div class="card-icon">
+        <i class="material-icons">{% if a.computer.operating_system.name == "MacOS" %}desktop_mac{% else %}memory{% endif %}</i>
+      </div>
+    </div>
+    <div class="card-content">
+      <h3 class="card-title">Computer
+      </h3>
+      <div class="row">
+        <p class="col-xs-6">Computer Domain and Name:</p>
+        <p class="col-xs-6 text-right">{{ a.computer.primary_domain }}/<strong>{{ a.computer.name }}</strong></p>
+        <p class="col-xs-4">Operating System:</p>
+        <p class="col-xs-8 text-right"><strong>{{ a.computer.operating_system }}</strong></p>
+        <p class="col-xs-6">IP Address:</p>
+        <p class="col-xs-6 text-right"><strong>{{ a.computer.IP_address }}</strong> <a href="#" class="btn-link btn-just-icon" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="Attempt to refresh. This could take up to 30 seconds."><i class="material-icons">refresh</i></a></p>
+        <p class="col-xs-6">Connected Monitors:</p>
+        <p class="col-xs-6 text-right"><strong>{{ a.computer.connected_monitors.all|length }}{% if a.computer.connected_monitors.all|length > 0 %}: {{ a.computer.get_connected_monitors }}{% endif %}</strong></p>
+        <p class="col-xs-4">Asset Tag:</p>
+        <p class="col-xs-8 text-right"><strong>{{ a.asset_tag }}</strong></p>
+      </div>
+    </div>
+    {% endif %}
+    {% if a.monitor %}
+    <!-- monitor -->
+    <div class="card-header card-header-icon " data-background-color="blue">
+      <div class="card-icon">
+        <i class="material-icons">desktop_windows</i>
+      </div>
+    </div>
+    <div class="card-content">
+      <h3 class="card-title">Monitor
+      </h3>
+      <div class="row">
+        <p class="col-xs-2">Model:</p>
+        <p class="col-xs-10 text-right"><strong>{{ a.monitor.model }}</strong></p>
+        <p class="col-xs-5">Connected to computer:</p>
+        <p class="col-xs-7 text-right"><strong>{{ a.monitor.get_connected_computer|default:"None" }}</strong></p>
+        <p class="col-xs-4">Display Inputs:</p>
+        <p class="col-xs-8 text-right"><strong>{{ a.monitor.display_inputs.all|length }}: {{ a.monitor.get_display_inputs }}</strong></p>
+        <p class="col-xs-4">Asset Tag:</p>
+        <p class="col-xs-8 text-right"><strong>{{ a.asset_tag }}</strong></p>
+      </div>
+    </div>
+    {% endif %}
+  {% if a.mobiledevice %}
+    <!-- mobile device -->
+    <div class="card-header card-header-icon " data-background-color="orange">
+      <div class="card-icon">
+        <i class="material-icons">{% if a.model.manufacturer == "Apple" %}tablet_mac{% else %}smartphone{% endif %}</i>
+      </div>
+    </div>
+    <div class="card-content">
+      <h3 class="card-title">Mobile Device
+      </h3>
+      <div class="row">
+        <p class="col-xs-6">Device Type:</p>
+        <p class="col-xs-6 text-right"><strong>{{ a.mobiledevice.model }}</strong></p>
+        <p class="col-xs-6">Device Name:</p>
+        <p class="col-xs-6 text-right"><strong>{{ a.mobiledevice.name }}</strong></p>
+        <p class="col-xs-6">IP Address:</p>
+        <p class="col-xs-6 text-right"><strong>{{ a.computer.IP_address }}</strong> <a href="#" class="btn-link btn-just-icon" data-toggle="tooltip" data-placement="top" title="" data-container="body" data-original-title="Attempt to refresh. This could take up to 30 seconds."><i class="material-icons">refresh</i></a></p>
+        <p class="col-xs-4">Asset Tag:</p>
+        <p class="col-xs-8 text-right"><strong>{{ a.asset_tag }}</strong></p>
+      </div>
+    </div>
+    {% endif %}
+    <div class="card-footer text-center">
+      <a href="#" class="text-center btn btn-danger small"><i class="material-icons">help</i> Report An Issue</a>
+      {% if a.ticket_set.all|length > 0 %}<a href="#" class="text-center btn btn-info small"><i class="material-icons">history</i> Ticket History</a>{% endif %}
+      {% if a.note_set.all|length > 0 %}<a href="#" class="text-center btn btn-primary small"><i class="material-icons">file_copy</i> Note History</a>{% else %}<a href="#" class="text-center btn btn-primary small"><i class="material-icons">note_add</i> Add a Note</a>{% endif %}
+    </div>
+  </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

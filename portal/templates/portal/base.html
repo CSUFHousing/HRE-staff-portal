@@ -93,6 +93,14 @@ your first tip: everything between the comment tags is just thrown out. It's not
           </li>
           <hr />
           {% endif %}
+          {% if request.user.employee.has_IT_assets %}
+          <li>
+            <a href="/technology/">
+              <i class="material-icons">desktop_windows</i>
+              <p>My IT Equipment</p>
+            </a>
+          </li>
+          {% endif %}
           <li>
             <a href="/staff/">
               <i class="material-icons">people</i>
