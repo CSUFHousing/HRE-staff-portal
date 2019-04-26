@@ -7,7 +7,7 @@ from portal.models import Employee
 
 MODEL_TYPE_CHOICES = (('C', 'Computer'), ('M', 'Monitor'), ('D', 'Mobile Device'), ('A', 'Accessory'))
 
-class Model(models.Model):
+class AssetModel(models.Model):
     manufacturer = models.CharField(max_length=50)
     name = models.CharField(max_length=50, null=True, blank=True)
     type = models.CharField(max_length=1, choices=MODEL_TYPE_CHOICES)
@@ -88,7 +88,7 @@ class Monitor(Asset):
     has_builtin_speakers = models.BooleanField(default=False)
     USB_ports = models.PositiveSmallIntegerField(default=0)
     in_use = models.BooleanField(default=False)
-    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type':'M'})
+    model = models.ForeignKey(to=AssetModel, on_delete=models.PROTECT, null=True, limit_choices_to={'type':'M'})
 
     def get_connected_computer(self):
         try:
@@ -120,7 +120,7 @@ class Computer(Asset):
     name = models.SlugField(unique=True, null=True, blank=True)
     IP_address = models.CharField(null=True, blank=True, max_length=15)
     connected_monitors = models.ManyToManyField(to=Monitor, through='MonitorConnection')
-    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'C'})
+    model = models.ForeignKey(to=AssetModel, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'C'})
 
     def get_absolute_url(self):
         return '/technology/user/lhiggott'
@@ -172,7 +172,7 @@ class MonitorConnection(models.Model):
 
 class MobileDevice(Asset):
     name = models.SlugField(unique=True, null=True, blank=True)
-    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'D'})
+    model = models.ForeignKey(to=AssetModel, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'D'})
     def __str__(self):
         s= ''
         if self.asset_tag:
@@ -183,7 +183,7 @@ class MobileDevice(Asset):
 
 class Accessory(Asset):
     type = models.CharField(max_length=20)
-    model = models.ForeignKey(to=Model, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'A'})
+    model = models.ForeignKey(to=AssetModel, on_delete=models.PROTECT, null=True, limit_choices_to={'type': 'A'})
 
     def __str__(self):
         return "{} {}".format(self.type, self.model)
