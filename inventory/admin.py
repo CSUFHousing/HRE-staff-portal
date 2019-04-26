@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.db.models import Q
 from portal.models import notify_devs
 
-from .models import Asset, Accessory, AudioPortType, Computer, DisplayPortType, MobileDevice, Model, Monitor, MonitorConnection, OperatingSystem, Note, Ticket
+from .models import Asset, Accessory, AudioPortType, Computer, DisplayPortType, MobileDevice, AssetModel, Monitor, MonitorConnection, OperatingSystem, Note, Ticket
 
 # Register your models here.
 
-for item in [Accessory, AudioPortType, DisplayPortType, MobileDevice, Model, OperatingSystem, Note, Ticket]:
+for item in [Accessory, AudioPortType, DisplayPortType, MobileDevice, AssetModel, OperatingSystem, Note, Ticket]:
     admin.site.register(item)
 
 
