@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'API',
     'rest_framework',
     'inventory',
+    'timesince',
 ]
 
 MIDDLEWARE = [
