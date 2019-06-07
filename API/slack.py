@@ -19,19 +19,20 @@ def respond(request):
         return HttpResponse(content=json.dumps({'challenge':challenge_val}), content_type='application/json')
     elif 'payload' in body:
         payload = json.loads(body['payload'])
+        channel = payload["channel"]["id"]
         response_url = payload["response_url"]
         responding_user = payload["user"]["username"]
         reaction_result = payload["actions"][0]["value"]
 
         notify_devs("success", "reaction received from {}: {}".format(responding_user, reaction_result))
+        send_to_slack({"text":"response received and processing","response_type":"ephemeral"}, channel=channel, url=response_url)
         return HttpResponse(content=None)
 
 
-def send_to_slack(content, channel="GBWTZANG6"):
+def send_to_slack(content, channel="GBWTZANG6", url="https://slack.com/api/chat.postMessage"):
     payload = json.dumps({"channel": channel, "blocks": content})
     headers = {"Content-type":"application/json", "Authorization": "Bearer {}".format(settings.SLACK_API_TOKEN)}
     print(settings.SLACK_API_TOKEN)
-    url = "https://slack.com/api/chat.postMessage"
     r = requests.post(url, data=payload, headers=headers)
     print(r.text)
 
