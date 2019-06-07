@@ -13,6 +13,7 @@ MS_FLOW_URL="https://prod-54.westus.logic.azure.com:443/workflows/306a0803a4ee49
 @csrf_exempt
 def dispatch(request):
     body = request.POST
+    notify_devs("info", "body is: {}\nrequest.POST is: {}".format(body, request.POST))
     room = body["room"]
     room_notify(room=room)
     return HttpResponse(content=None)
