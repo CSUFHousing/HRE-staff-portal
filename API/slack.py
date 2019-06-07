@@ -25,7 +25,8 @@ def respond(request):
         reaction_result = payload["actions"][0]["value"]
 
         notify_devs("success", "reaction received from {}: {}".format(responding_user, reaction_result))
-        send_to_slack({"text":"response received and processing","response_type":"ephemeral"}, channel=channel, url=response_url)
+        r = requests.post(response_url, data=json.dumps({"replace_origina":"true","text":"response received and processing"}),
+                          headers = {"Content-type":"application/json"})
         return HttpResponse(content=None)
 
 
@@ -33,8 +34,7 @@ def send_to_slack(content, channel="GBWTZANG6", url="https://slack.com/api/chat.
     payload = json.dumps({"channel": channel, "blocks": content})
     headers = {"Content-type":"application/json", "Authorization": "Bearer {}".format(settings.SLACK_API_TOKEN)}
     print(settings.SLACK_API_TOKEN)
-    r = requests.post(url, data=payload, headers=headers)
-    print(r.text)
+    return requests.post(url, data=payload, headers=headers)
 
 
 def room_notify(room="Acacia-101", channel="GBWTZANG6"):
@@ -54,7 +54,7 @@ def room_notify(room="Acacia-101", channel="GBWTZANG6"):
                 "text": {
                     "type": "plain_text",
                     "emoji": True,
-                    "text": ":white_heavy_check_mark: Good to go!"
+                    "text": ":white_check_mark: Good to go!"
                 },
                 "style": "primary",
                 "value": "good"
