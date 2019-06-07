@@ -18,7 +18,7 @@ def respond(request):
         notify_devs('warning', 'body is: {} and challenge is: {}'.format(str(body), challenge_val))
         return HttpResponse(content=json.dumps({'challenge':challenge_val}), content_type='application/json')
     elif 'payload' in body:
-        payload = json.dumps(body['payload'])
+        payload = json.loads(body['payload'])
         response_url = payload["response_url"]
         responding_user = payload["user"]["username"]
         reaction_result = payload["actions"][0]["value"]
