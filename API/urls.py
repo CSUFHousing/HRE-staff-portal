@@ -20,5 +20,6 @@ schema_view = get_schema_view(title='Pastebin API')
 urlpatterns = [
     url(r'^schema/$', schema_view),
     url(r'^slack/$', slack.respond),
+    url(r'^slack-sender/$', slack.dispatch),
     url(r'^', include(router.urls)),
 ]

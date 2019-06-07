@@ -11,6 +11,13 @@ from portal.models import notify_devs
 MS_FLOW_URL="https://prod-54.westus.logic.azure.com:443/workflows/306a0803a4ee49fc939bb1a1a7467829/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LPDDdoYWwIkmlKVdgu_0PPOa5cMPHFzm8GOOyqqiSn8"
 
 @csrf_exempt
+def dispatch(request):
+    body = request.POST
+    room = body["room"]
+    room_notify(room=room)
+    return HttpResponse(content=None)
+
+@csrf_exempt
 def respond(request):
     body = request.POST
     notify_devs("primary", body)
