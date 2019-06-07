@@ -19,14 +19,17 @@ def respond(request):
         return HttpResponse(content=json.dumps({'challenge':challenge_val}), content_type='application/json')
     elif 'payload' in body:
         payload = json.loads(body['payload'])
-        channel = payload["channel"]["id"]
+        # channel = payload["channel"]["id"]
         response_url = payload["response_url"]
-        responding_user = payload["user"]["username"]
-        reaction_result = payload["actions"][0]["value"]
+        responding_user = payload["user"]["id"]
+        reaction = payload["actions"][0]["value"]
+        reaction_results = reaction.split("|")
+        room = reaction_results[0]
+        status = reaction_results[1]
 
-        notify_devs("success", "reaction received from {}: {}".format(responding_user, reaction_result))
-        r = requests.post(response_url, data=json.dumps({"replace_origina":"true","text":"response received and processing"}),
-                          headers = {"Content-type":"application/json"})
+        notify_devs("success", "reaction received from {}: {}".format(responding_user, reaction_results))
+        r = requests.post(response_url, data=json.dumps({"replace_original":"true","text":"<@{}> marked {} as {}.".format(
+            responding_user, room, status)}),headers = {"Content-type":"application/json"})
         return HttpResponse(content=None)
 
 
@@ -43,7 +46,7 @@ def room_notify(room="Acacia-101", channel="GBWTZANG6"):
         "type": "section",
         "text": {
             "type": "mrkdwn",
-            "text": "Acacia-102 is empty and ready for inspection."
+            "text": "{} is empty and ready for inspection.".format(room)
         }
     },
    {
@@ -57,7 +60,7 @@ def room_notify(room="Acacia-101", channel="GBWTZANG6"):
                     "text": ":white_check_mark: Good to go!"
                 },
                 "style": "primary",
-                "value": "good"
+                "value": "{}|good".format(room)
             },
             {
                 "type": "button",
@@ -67,7 +70,7 @@ def room_notify(room="Acacia-101", channel="GBWTZANG6"):
                     "text": ":x: Has a problem!"
                 },
                 "style": "danger",
-                "value": "bad"
+                "value": "{}|bad".format(room)
             }
         ]
     }
