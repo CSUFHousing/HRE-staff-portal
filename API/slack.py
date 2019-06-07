@@ -11,16 +11,17 @@ from portal.models import notify_devs
 
 @csrf_exempt
 def respond(request):
-    body = json.loads((request.body.decode('utf-8')))
-    notify_devs('warning', request.body)
+    body = request.POST
+    notify_devs("primary", body)
     if 'challenge' in body:
         challenge_val = body['challenge']
         notify_devs('warning', 'body is: {} and challenge is: {}'.format(str(body), challenge_val))
         return HttpResponse(content=json.dumps({'challenge':challenge_val}), content_type='application/json')
-    elif body["type"] == "block_actions":
-        response_url = body["response_url"]
-        responding_user = body["user"]["username"]
-        reaction_result = body["actions"][0]["value"]
+    elif 'payload' in body:
+        payload = body['payload']
+        response_url = payload["response_url"]
+        responding_user = payload["user"]["username"]
+        reaction_result = payload["actions"][0]["value"]
 
         notify_devs("success", "reaction received from {}: {}".format(responding_user, reaction_result))
         return HttpResponse(content=None)
