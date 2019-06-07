@@ -35,7 +35,11 @@ def respond(request):
             responding_user_id, room, status)}),headers={"Content-type":"application/json"})
         # send update to MS Flow to update spreadsheet.
         ms_flow_data = {"room":room, "result":status, "userid":responding_user}
-        r2 = requests.post(MS_FLOW_URL, data=json.dumps(ms_flow_data), headers={"Content-type":"application/json"})
+        r2 = requests.post(MS_FLOW_URL, data=json.dumps(ms_flow_data), headers={"Content-type": "application/json"})
+        # update message in Slack with MS Flow response
+        r3 = requests.post(response_url, data=json.dumps({"ephemeral": "true", "text": "{}".format(r2.status_code)}),
+                           headers={"Content-type": "application/json"})
+        notify_devs("danger","process finished\n{}-{}\n{}-{}".format(r2.status_code, r2.text, r3.status_code, r3.text))
         return HttpResponse(content=None)
 
 
