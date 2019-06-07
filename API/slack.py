@@ -1,13 +1,14 @@
 from django.http.response import JsonResponse as JSR
 from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 import requests
 import json
 
-from django.conf import settings
-
 from portal.models import notify_devs
+
+MS_FLOW_URL="https://prod-54.westus.logic.azure.com:443/workflows/306a0803a4ee49fc939bb1a1a7467829/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LPDDdoYWwIkmlKVdgu_0PPOa5cMPHFzm8GOOyqqiSn8"
 
 @csrf_exempt
 def respond(request):
@@ -21,15 +22,20 @@ def respond(request):
         payload = json.loads(body['payload'])
         # channel = payload["channel"]["id"]
         response_url = payload["response_url"]
-        responding_user = payload["user"]["id"]
+        responding_user_id = payload["user"]["id"]
+        responding_user = payload["user"]
         reaction = payload["actions"][0]["value"]
         reaction_results = reaction.split("|")
         room = reaction_results[0]
         status = reaction_results[1]
 
         notify_devs("success", "reaction received from {}: {}".format(responding_user, reaction_results))
-        r = requests.post(response_url, data=json.dumps({"replace_original":"true","text":"<@{}> marked {} as {}.".format(
-            responding_user, room, status)}),headers = {"Content-type":"application/json"})
+        # send reaction to slack
+        r1 = requests.post(response_url, data=json.dumps({"replace_original":"true","text":"<@{}> marked {} as {}.".format(
+            responding_user_id, room, status)}),headers={"Content-type":"application/json"})
+        # send update to MS Flow to update spreadsheet.
+        ms_flow_data = {"room":room, "result":status, "userid":responding_user}
+        r2 = requests.post(MS_FLOW_URL, data=json.dumps(ms_flow_data), headers={"Content-type":"application/json"})
         return HttpResponse(content=None)
 
 
