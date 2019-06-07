@@ -6,8 +6,10 @@ coreapi-cli==1.0.6
 coreschema==0.0.4
 Django==2.0.12
 djangorestframework==3.8.2
+djangorestframework-stubs==0.4.2
 httpie==0.9.9
 httplib2==0.10.3
+humanize==0.5.1
 idna==2.6
 itypes==1.1.0
 Jinja2==2.10.1
